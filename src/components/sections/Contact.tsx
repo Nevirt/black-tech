@@ -116,7 +116,7 @@ const Contact = () => {
                   Tel: +54 (11) 1234-5678
                 </Typography>
                 <Typography variant="body1">
-                  Buenos Aires, Argentina
+                  San Juan Bautista, Paraguay
                 </Typography>
               </Box>
 

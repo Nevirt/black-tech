@@ -116,7 +116,7 @@ const Footer = () => {
               Tel: +54 (11) 1234-5678
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Buenos Aires, Argentina
+              San Juan Bautista, Paraguay
             </Typography>
           </MuiGrid>
         </MuiGrid>
