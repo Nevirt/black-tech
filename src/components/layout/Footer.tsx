@@ -113,7 +113,7 @@ const Footer = () => {
               Email: info@blacktech.com
             </Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
-              Tel: +54 (11) 1234-5678
+              Tel: +595 976 147913
             </Typography>
             <Typography variant="body2" color="text.secondary">
               San Juan Bautista, Paraguay
