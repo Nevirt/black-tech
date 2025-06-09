@@ -1,13 +1,22 @@
 'use client';
 
-import { Box, Container, Typography, Button } from '@mui/material';
+import { Box, Container, Typography, Button, Grid } from '@mui/material';
 import { motion } from 'framer-motion';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ParticlesBackground from '../ParticlesBackground';
+import { COMPANY_CONFIG } from '@/config/company';
 
 const Hero = () => {
-  const scrollToProduct = () => {
-    const element = document.querySelector('#product');
+  const scrollToProducts = () => {
+    const element = document.querySelector('#products');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToContact = () => {
+    const element = document.querySelector('#contact');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -23,111 +32,251 @@ const Hero = () => {
         alignItems: 'center',
         position: 'relative',
         overflow: 'hidden',
-        background: 'linear-gradient(135deg, #000000 0%, #1B1B1B 100%)',
+        background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%)',
       }}
     >
       <ParticlesBackground />
-      <Container maxWidth="lg">
-        <Box
-          sx={{
-            textAlign: 'center',
-            color: 'white',
-            position: 'relative',
-            zIndex: 1,
+      
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        <Grid container spacing={4} alignItems="center" sx={{ minHeight: '80vh' }}>
+          <Grid item xs={12} md={8}>
+            <Box sx={{ color: 'white' }}>
+              {/* Tagline */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mb: 2,
+                    color: 'grey.400',
+                    fontSize: '1.1rem',
+                    fontWeight: 500,
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {COMPANY_CONFIG.tagline}
+                </Typography>
+              </motion.div>
+
+              {/* Company Name */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <Typography
+                  variant="h1"
+                  sx={{
+                    fontWeight: 700,
+                    mb: 3,
+                    fontSize: { xs: '3rem', md: '4.5rem', lg: '5.5rem' },
+                    lineHeight: 1.1,
+                    background: 'linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  {COMPANY_CONFIG.name}
+                </Typography>
+              </motion.div>
+
+              {/* Description */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <Typography
+                  variant="h5"
+                  sx={{
+                    mb: 4,
+                    fontSize: { xs: '1.2rem', md: '1.5rem' },
+                    fontWeight: 400,
+                    lineHeight: 1.6,
+                    color: 'grey.300',
+                    maxWidth: '600px',
+                  }}
+                >
+                  {COMPANY_CONFIG.heroDescription.split('\n\n')[0]}
+                </Typography>
+              </motion.div>
+
+              {/* Additional Description */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mb: 5,
+                    fontSize: '1.1rem',
+                    lineHeight: 1.7,
+                    color: 'grey.400',
+                    maxWidth: '650px',
+                  }}
+                >
+                  {COMPANY_CONFIG.heroDescription.split('\n\n')[1]}
+                </Typography>
+              </motion.div>
+
+              {/* Call to Action Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+              >
+                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    onClick={scrollToProducts}
+                    endIcon={<ArrowForwardIcon />}
+                    sx={{
+                      px: 4,
+                      py: 2,
+                      borderRadius: '50px',
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                      background: 'linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%)',
+                      color: 'black',
+                      boxShadow: '0px 8px 32px rgba(255, 255, 255, 0.2)',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 100%)',
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0px 12px 40px rgba(255, 255, 255, 0.3)',
+                      },
+                    }}
+                  >
+                    Explorar Productos
+                  </Button>
+                  
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={scrollToContact}
+                    sx={{
+                      px: 4,
+                      py: 2,
+                      borderRadius: '50px',
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                      borderColor: 'white',
+                      color: 'white',
+                      borderWidth: '2px',
+                      '&:hover': {
+                        borderColor: 'white',
+                        bgcolor: 'rgba(255, 255, 255, 0.1)',
+                        transform: 'translateY(-2px)',
+                        borderWidth: '2px',
+                      },
+                    }}
+                  >
+                    Contactanos
+                  </Button>
+                </Box>
+              </motion.div>
+            </Box>
+          </Grid>
+
+          {/* Right side - Visual element */}
+          <Grid item xs={12} md={4}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 1 }}
+            >
+              <Box
+                sx={{
+                  position: 'relative',
+                  height: { xs: '300px', md: '400px' },
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {/* Geometric shapes for visual interest */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    width: '200px',
+                    height: '200px',
+                    border: '2px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '50%',
+                    animation: 'rotate 20s linear infinite',
+                    '@keyframes rotate': {
+                      '0%': { transform: 'rotate(0deg)' },
+                      '100%': { transform: 'rotate(360deg)' },
+                    },
+                  }}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    width: '150px',
+                    height: '150px',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    borderRadius: '50%',
+                    animation: 'rotate 15s linear infinite reverse',
+                  }}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    width: '100px',
+                    height: '100px',
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '50%',
+                    backdropFilter: 'blur(10px)',
+                  }}
+                />
+              </Box>
+            </motion.div>
+          </Grid>
+        </Grid>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          style={{
+            position: 'absolute',
+            bottom: '2rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
           }}
         >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Typography
-              variant="h1"
-              sx={{
-                fontWeight: 700,
-                mb: 2,
-                background: 'linear-gradient(to right, #FFFFFF, #90E0EF)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              BLACK TECH
-            </Typography>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            <Typography
-              variant="h2"
-              sx={{
-                mb: 4,
-                fontSize: { xs: '1.5rem', md: '2.5rem' },
-                fontWeight: 500,
-              }}
-            >
-              Automatizá tu comunicación con tecnología de punta
-            </Typography>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <Button
-              variant="contained"
-              size="large"
-              onClick={scrollToProduct}
-              sx={{
-                mt: 4,
-                px: 4,
-                py: 2,
-                borderRadius: '30px',
-                background: 'linear-gradient(45deg, #00B4D8 30%, #0077B6 90%)',
-                '&:hover': {
-                  background: 'linear-gradient(45deg, #0077B6 30%, #00B4D8 90%)',
-                },
-              }}
-            >
-              Descubrí nuestro producto
-            </Button>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            style={{
-              position: 'absolute',
-              bottom: '2rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
+            animate={{
+              y: [0, 10, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatType: 'reverse',
             }}
           >
-            <motion.div
-              animate={{
-                y: [0, 10, 0],
+            <KeyboardArrowDownIcon
+              sx={{
+                fontSize: '3rem',
+                color: 'white',
+                cursor: 'pointer',
+                opacity: 0.7,
+                '&:hover': {
+                  opacity: 1,
+                },
               }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                repeatType: 'reverse',
-              }}
-            >
-              <KeyboardArrowDownIcon
-                sx={{
-                  fontSize: '3rem',
-                  color: 'primary.main',
-                  cursor: 'pointer',
-                }}
-                onClick={scrollToProduct}
-              />
-            </motion.div>
+              onClick={scrollToProducts}
+            />
           </motion.div>
-        </Box>
+        </motion.div>
       </Container>
     </Box>
   );

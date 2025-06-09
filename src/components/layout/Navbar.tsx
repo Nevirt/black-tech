@@ -1,34 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   AppBar,
-  Box,
   Toolbar,
-  IconButton,
   Typography,
-  Menu,
-  Container,
   Button,
+  Container,
+  Box,
+  IconButton,
+  Menu,
   MenuItem,
   useScrollTrigger,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import { motion } from 'framer-motion';
-
-const pages = [
-  { title: 'Inicio', href: '#home' },
-  { title: 'Quiénes Somos', href: '#about' },
-  { title: 'Producto', href: '#product' },
-  { title: 'Servicios', href: '#services' },
-  { title: 'Contacto', href: '#contact' },
-];
+import MenuIcon from '@mui/icons-material/Menu';
+import Image from 'next/image';
+import { COMPANY_CONFIG } from '@/config/company';
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 100,
+    threshold: 0,
   });
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -40,11 +34,11 @@ const Navbar = () => {
   };
 
   const scrollToSection = (sectionId: string) => {
+    handleCloseNavMenu();
     const element = document.querySelector(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-    handleCloseNavMenu();
   };
 
   return (
@@ -53,31 +47,47 @@ const Navbar = () => {
       color="transparent"
       sx={{
         background: trigger ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
-        boxShadow: trigger ? 1 : 'none',
-        backdropFilter: trigger ? 'blur(10px)' : 'none',
+        boxShadow: trigger ? '0px 2px 20px rgba(0, 0, 0, 0.1)' : 'none',
+        backdropFilter: trigger ? 'blur(20px)' : 'none',
         transition: 'all 0.3s ease-in-out',
+        borderBottom: trigger ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
       }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ py: 1 }}>
           {/* Logo - Desktop */}
-          <Typography
-            variant="h6"
-            noWrap
+          <Box
             component={motion.div}
             whileHover={{ scale: 1.05 }}
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontWeight: 700,
-              color: 'primary.main',
-              textDecoration: 'none',
+              alignItems: 'center',
               cursor: 'pointer',
             }}
             onClick={() => scrollToSection('#home')}
           >
-            BLACK TECH
-          </Typography>
+            <Image
+              src="/inzaiq-logo.png"
+              alt={`${COMPANY_CONFIG.name} Logo`}
+              width={40}
+              height={40}
+              style={{ marginRight: '12px' }}
+            />
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                fontWeight: 700,
+                color: trigger ? 'primary.main' : 'white',
+                textDecoration: 'none',
+                fontSize: '1.5rem',
+                letterSpacing: '0.5px',
+              }}
+            >
+              {COMPANY_CONFIG.name}
+            </Typography>
+          </Box>
 
           {/* Mobile Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -86,7 +96,7 @@ const Navbar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              sx={{ color: trigger ? 'primary.main' : 'white' }}
             >
               <MenuIcon />
             </IconButton>
@@ -106,54 +116,86 @@ const Navbar = () => {
               onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: 'block', md: 'none' },
+                '& .MuiPaper-root': {
+                  borderRadius: 2,
+                  mt: 1,
+                  boxShadow: '0px 8px 32px rgba(0, 0, 0, 0.12)',
+                },
               }}
             >
-              {pages.map((page) => (
+              {COMPANY_CONFIG.navigation.map((page) => (
                 <MenuItem 
                   key={page.title} 
                   onClick={() => scrollToSection(page.href)}
+                  sx={{
+                    '&:hover': {
+                      bgcolor: 'grey.50',
+                    },
+                  }}
                 >
-                  <Typography textAlign="center">{page.title}</Typography>
+                  <Typography textAlign="center" fontWeight={500}>
+                    {page.title}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
           {/* Logo - Mobile */}
-          <Typography
-            variant="h6"
-            noWrap
+          <Box
             component={motion.div}
             whileHover={{ scale: 1.05 }}
             sx={{
-              mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontWeight: 700,
-              color: 'primary.main',
-              textDecoration: 'none',
+              alignItems: 'center',
               cursor: 'pointer',
             }}
             onClick={() => scrollToSection('#home')}
           >
-            BLACK TECH
-          </Typography>
+            <Image
+              src="/inzaiq-logo.png"
+              alt={`${COMPANY_CONFIG.name} Logo`}
+              width={32}
+              height={32}
+              style={{ marginRight: '8px' }}
+            />
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                fontWeight: 700,
+                color: trigger ? 'primary.main' : 'white',
+                textDecoration: 'none',
+                fontSize: '1.25rem',
+              }}
+            >
+              {COMPANY_CONFIG.name}
+            </Typography>
+          </Box>
 
           {/* Desktop Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
-            {pages.map((page) => (
+            {COMPANY_CONFIG.navigation.map((page) => (
               <Button
                 key={page.title}
                 component={motion.button}
                 whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => scrollToSection(page.href)}
                 sx={{ 
                   my: 2, 
                   mx: 1,
-                  color: 'text.primary',
+                  px: 2,
+                  py: 1,
+                  color: trigger ? 'text.primary' : 'white',
                   display: 'block',
+                  fontWeight: 500,
+                  borderRadius: 2,
+                  transition: 'all 0.3s ease-in-out',
                   '&:hover': {
                     color: 'primary.main',
+                    bgcolor: trigger ? 'grey.50' : 'rgba(255, 255, 255, 0.1)',
                   },
                 }}
               >

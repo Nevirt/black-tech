@@ -1,46 +1,25 @@
 'use client';
 
-import { Box, Container, Typography } from '@mui/material';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
+import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material';
 import { motion } from 'framer-motion';
-import CodeIcon from '@mui/icons-material/Code';
-import StorageIcon from '@mui/icons-material/Storage';
-import CloudIcon from '@mui/icons-material/Cloud';
-import SecurityIcon from '@mui/icons-material/Security';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import IconRenderer from '@/components/ui/IconRenderer';
+import { COMPANY_CONFIG } from '@/config/company';
 
-const services = [
-  {
-    icon: <CodeIcon />,
-    title: 'Desarrollo de Software a Medida',
-    description: 'Creamos soluciones personalizadas que se adaptan perfectamente a tus necesidades específicas.',
+const cardVariants = {
+  offscreen: {
+    y: 50,
+    opacity: 0,
   },
-  {
-    icon: <StorageIcon />,
-    title: 'Integración de Sistemas',
-    description: 'Conectamos tus sistemas existentes con nuevas tecnologías para maximizar su eficiencia.',
+  onscreen: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      bounce: 0.4,
+      duration: 0.8,
+    },
   },
-  {
-    icon: <CloudIcon />,
-    title: 'Servicios en la Nube',
-    description: 'Implementamos y gestionamos infraestructuras cloud escalables y seguras.',
-  },
-  {
-    icon: <SecurityIcon />,
-    title: 'Seguridad Digital',
-    description: 'Protegemos tus datos y sistemas con las últimas tecnologías en ciberseguridad.',
-  },
-  {
-    icon: <SupportAgentIcon />,
-    title: 'Soporte Técnico 24/7',
-    description: 'Brindamos asistencia técnica continua para garantizar el funcionamiento óptimo de tus sistemas.',
-  },
-];
+};
 
 const Services = () => {
   return (
@@ -48,109 +27,222 @@ const Services = () => {
       id="services"
       component="section"
       sx={{
-        py: { xs: 8, md: 12 },
+        py: { xs: 10, md: 15 },
         bgcolor: 'background.default',
+        position: 'relative',
       }}
     >
       <Container maxWidth="lg">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <Typography
-            variant="h2"
-            align="center"
-            gutterBottom
-            sx={{
-              mb: { xs: 4, md: 6 },
-              color: 'text.primary',
-            }}
-          >
-            Nuestros Servicios
-          </Typography>
+          <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 12 } }}>
+            <Typography
+              variant="h2"
+              sx={{
+                mb: 4,
+                color: 'text.primary',
+                fontWeight: 700,
+                fontSize: { xs: '2.5rem', md: '3.5rem' },
+              }}
+            >
+              Nuestros Servicios
+            </Typography>
 
-          <Typography
-            variant="h5"
-            align="center"
-            color="text.secondary"
-            sx={{
-              mb: { xs: 6, md: 8 },
-              maxWidth: '800px',
-              mx: 'auto',
-            }}
-          >
-            Ofrecemos una gama completa de servicios tecnológicos para impulsar
-            tu negocio hacia el futuro.
-          </Typography>
+            <Typography
+              variant="h5"
+              color="text.secondary"
+              sx={{
+                maxWidth: '800px',
+                mx: 'auto',
+                lineHeight: 1.6,
+                fontSize: { xs: '1.1rem', md: '1.3rem' },
+                fontWeight: 400,
+              }}
+            >
+              Ofrecemos una gama completa de servicios tecnológicos para impulsar
+              tu negocio hacia el futuro digital.
+            </Typography>
+          </Box>
         </motion.div>
 
-        <Timeline position="alternate">
-          {services.map((service, index) => (
-            <TimelineItem key={service.title}>
-              <TimelineSeparator>
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    type: 'spring',
-                    stiffness: 260,
-                    damping: 20,
-                    delay: index * 0.1,
+        <Grid container spacing={4}>
+          {COMPANY_CONFIG.services.map((service, index) => (
+            <Grid item xs={12} sm={6} md={4} key={service.title}>
+              <motion.div
+                initial="offscreen"
+                whileInView="onscreen"
+                viewport={{ once: true, amount: 0.3 }}
+                variants={cardVariants}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderRadius: 3,
+                    border: '1px solid',
+                    borderColor: 'grey.200',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                      boxShadow: '0px 16px 48px rgba(0, 0, 0, 0.12)',
+                      borderColor: 'primary.main',
+                      '& .service-icon': {
+                        transform: 'scale(1.1)',
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                      },
+                    },
                   }}
                 >
-                  <TimelineDot
-                    sx={{
-                      bgcolor: 'primary.main',
-                      p: 2,
-                    }}
-                  >
-                    {service.icon}
-                  </TimelineDot>
-                </motion.div>
-                {index < services.length - 1 && (
-                  <TimelineConnector sx={{ bgcolor: 'primary.light' }} />
-                )}
-              </TimelineSeparator>
-              <TimelineContent>
-                <motion.div
-                  initial={{ opacity: 0, x: index % 2 === 0 ? 50 : -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: index * 0.1 }}
-                >
-                  <Box
-                    sx={{
-                      bgcolor: 'background.paper',
-                      p: 3,
-                      borderRadius: 2,
-                      boxShadow: 1,
-                      '&:hover': {
-                        transform: 'translateY(-4px)',
-                        transition: 'transform 0.3s ease-in-out',
-                        boxShadow: 3,
-                      },
-                    }}
-                  >
+                  <CardContent sx={{ p: 4, textAlign: 'center' }}>
+                    {/* Icon */}
+                    <Box
+                      className="service-icon"
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: '50%',
+                        bgcolor: 'grey.100',
+                        color: 'primary.main',
+                        mb: 3,
+                        mx: 'auto',
+                        transition: 'all 0.3s ease-in-out',
+                      }}
+                    >
+                      <IconRenderer iconName={service.icon} fontSize="large" />
+                    </Box>
+
+                    {/* Title */}
                     <Typography
                       variant="h6"
                       component="h3"
-                      gutterBottom
-                      sx={{ fontWeight: 600 }}
+                      sx={{
+                        fontWeight: 600,
+                        mb: 2,
+                        color: 'text.primary',
+                      }}
                     >
                       {service.title}
                     </Typography>
-                    <Typography color="text.secondary">
+
+                    {/* Description */}
+                    <Typography
+                      variant="body1"
+                      color="text.secondary"
+                      sx={{
+                        lineHeight: 1.6,
+                      }}
+                    >
                       {service.description}
                     </Typography>
-                  </Box>
-                </motion.div>
-              </TimelineContent>
-            </TimelineItem>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </Grid>
           ))}
-        </Timeline>
+        </Grid>
+
+        {/* Call to Action Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <Box
+            sx={{
+              mt: { xs: 8, md: 12 },
+              p: { xs: 4, md: 6 },
+              bgcolor: 'primary.main',
+              color: 'white',
+              borderRadius: 4,
+              textAlign: 'center',
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                mb: 3,
+                fontWeight: 600,
+              }}
+            >
+              ¿Listo para transformar tu negocio?
+            </Typography>
+            
+            <Typography
+              variant="h6"
+              sx={{
+                mb: 4,
+                opacity: 0.9,
+                fontWeight: 400,
+                maxWidth: '600px',
+                mx: 'auto',
+              }}
+            >
+              Contactanos hoy y descubre cómo nuestras soluciones de IA pueden 
+              llevar tu empresa al siguiente nivel.
+            </Typography>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  background: 'white',
+                  color: 'black',
+                  border: 'none',
+                  borderRadius: '50px',
+                  padding: '12px 32px',
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease-in-out',
+                }}
+                onClick={() => {
+                  const element = document.querySelector('#contact');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
+                Contactar Ahora
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  background: 'transparent',
+                  color: 'white',
+                  border: '2px solid white',
+                  borderRadius: '50px',
+                  padding: '12px 32px',
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease-in-out',
+                }}
+                onClick={() => {
+                  const element = document.querySelector('#products');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
+                Ver Productos
+              </motion.button>
+            </Box>
+          </Box>
+        </motion.div>
       </Container>
     </Box>
   );

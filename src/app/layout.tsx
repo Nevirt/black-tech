@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
+import { SEO_CONFIG } from '@/config/company';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -12,9 +13,43 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Black Tech - Innovative Messaging Solutions",
-  description: "Black Tech provides cutting-edge messaging bot solutions powered by AI technology.",
-  keywords: "messaging bots, AI technology, Black Tech, innovation",
+  title: SEO_CONFIG.title,
+  description: SEO_CONFIG.description,
+  keywords: SEO_CONFIG.keywords,
+  authors: [{ name: SEO_CONFIG.author }],
+  openGraph: {
+    title: SEO_CONFIG.title,
+    description: SEO_CONFIG.description,
+    url: SEO_CONFIG.url,
+    siteName: 'InzaiQ',
+    images: [
+      {
+        url: SEO_CONFIG.image,
+        width: 1200,
+        height: 630,
+        alt: 'InzaiQ - Donde la innovación toma forma',
+      },
+    ],
+    locale: 'es_ES',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SEO_CONFIG.title,
+    description: SEO_CONFIG.description,
+    images: [SEO_CONFIG.image],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -23,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="es" className={inter.variable}>
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />
