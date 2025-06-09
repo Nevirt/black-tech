@@ -68,7 +68,7 @@ const Navbar = () => {
             onClick={() => scrollToSection('#home')}
           >
             <Image
-              src="/inzaiq-logo.png"
+              src={trigger ? "/inzaiq-logo.png" : "/inzaiq-logo-blanco.png"}
               alt={`${COMPANY_CONFIG.name} Logo`}
               width={40}
               height={40}
@@ -154,7 +154,7 @@ const Navbar = () => {
             onClick={() => scrollToSection('#home')}
           >
             <Image
-              src="/inzaiq-logo.png"
+              src={trigger ? "/inzaiq-logo.png" : "/inzaiq-logo-blanco.png"}
               alt={`${COMPANY_CONFIG.name} Logo`}
               width={32}
               height={32}

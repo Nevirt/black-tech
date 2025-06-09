@@ -13,6 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://inzaiq.com'),
   title: SEO_CONFIG.title,
   description: SEO_CONFIG.description,
   keywords: SEO_CONFIG.keywords,
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     siteName: 'InzaiQ',
     images: [
       {
-        url: SEO_CONFIG.image,
+        url: '/inzaiq-logo.png',
         width: 1200,
         height: 630,
         alt: 'InzaiQ - Donde la innovación toma forma',
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: SEO_CONFIG.title,
     description: SEO_CONFIG.description,
-    images: [SEO_CONFIG.image],
+    images: ['/inzaiq-logo.png'],
   },
   robots: {
     index: true,

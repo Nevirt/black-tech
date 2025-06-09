@@ -8,6 +8,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useTheme } from '@mui/material/styles';
+import Image from 'next/image';
 import { COMPANY_CONFIG } from '@/config/company';
 
 const Footer = () => {
@@ -71,16 +72,24 @@ const Footer = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <Typography 
-                variant="h5" 
-                sx={{ 
-                  fontWeight: 700, 
-                  mb: 2,
-                  fontSize: '1.5rem',
-                }}
-              >
-                {COMPANY_CONFIG.name}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Image
+                  src="/inzaiq-logo-blanco.png"
+                  alt={`${COMPANY_CONFIG.name} Logo`}
+                  width={40}
+                  height={40}
+                  style={{ marginRight: '12px' }}
+                />
+                <Typography 
+                  variant="h5" 
+                  sx={{ 
+                    fontWeight: 700,
+                    fontSize: '1.5rem',
+                  }}
+                >
+                  {COMPANY_CONFIG.name}
+                </Typography>
+              </Box>
               
               <Typography 
                 variant="body2" 
