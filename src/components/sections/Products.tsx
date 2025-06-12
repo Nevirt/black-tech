@@ -92,12 +92,18 @@ const Products = () => {
     setDemoModalOpen(false);
   };
 
-  // Mostrar vista de casos de uso si está seleccionada
-  if (viewMode === 'use-cases') {
-    return <UseCases onBack={handleBackToProducts} onOpenDemo={handleOpenDemo} />;
-  }
-
   return (
+    <>
+      {/* Demo Modal - Available in all views */}
+      <DemoModal open={demoModalOpen} onClose={handleCloseDemo} />
+      
+      {/* Use Cases View */}
+      {viewMode === 'use-cases' && (
+        <UseCases onBack={handleBackToProducts} onOpenDemo={handleOpenDemo} />
+      )}
+      
+      {/* Products View */}
+      {viewMode === 'products' && (
     <Box
       id="products"
       component="section"
@@ -429,10 +435,9 @@ const Products = () => {
           </>
         )}
       </Container>
-
-      {/* Demo Modal */}
-      <DemoModal open={demoModalOpen} onClose={handleCloseDemo} />
-    </Box>
+      </Box>
+      )}
+    </>
   );
 };
 
