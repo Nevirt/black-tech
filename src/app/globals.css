@@ -6,6 +6,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Compensar altura del navbar */
 }
 
 body {
@@ -16,7 +17,52 @@ body {
 
 /* Smooth scrolling for sections */
 section {
-  scroll-margin-top: 64px; /* Height of the navbar */
+  scroll-margin-top: 80px; /* Height of the navbar */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animaciones de transición para secciones */
+section:target {
+  animation: highlight-section 0.8s ease-out;
+}
+
+@keyframes highlight-section {
+  0% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.005);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Mejoras para el scroll en móvil */
+@media (max-width: 768px) {
+  html {
+    scroll-padding-top: 70px;
+  }
+  
+  section {
+    scroll-margin-top: 70px;
+  }
+}
+
+/* Animación suave para botones de navegación */
+.nav-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-button:hover {
+  transform: translateY(-2px);
+}
+
+.nav-button:active {
+  transform: translateY(0px) scale(0.98);
 }
 
 /* Custom scrollbar */

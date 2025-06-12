@@ -10,10 +10,12 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import { useTheme } from '@mui/material/styles';
 import Image from 'next/image';
 import { COMPANY_CONFIG } from '@/config/company';
+import { useScrollTo } from '@/hooks/useScrollTo';
 
 const Footer = () => {
   const theme = useTheme();
   const currentYear = new Date().getFullYear();
+  const { scrollToSection: scrollTo } = useScrollTo();
 
   const socialIcons = {
     LinkedIn: <LinkedInIcon />,
@@ -31,10 +33,7 @@ const Footer = () => {
   ];
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.querySelector(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollTo(sectionId);
   };
 
   return (

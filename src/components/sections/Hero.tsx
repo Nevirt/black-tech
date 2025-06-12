@@ -6,20 +6,17 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ParticlesBackground from '../ParticlesBackground';
 import { COMPANY_CONFIG } from '@/config/company';
+import { useScrollTo } from '@/hooks/useScrollTo';
 
 const Hero = () => {
+  const { scrollToSection } = useScrollTo();
+
   const scrollToProducts = () => {
-    const element = document.querySelector('#products');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToSection('#products');
   };
 
   const scrollToContact = () => {
-    const element = document.querySelector('#contact');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToSection('#contact');
   };
 
   return (

@@ -17,9 +17,11 @@ import { motion } from 'framer-motion';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
 import { COMPANY_CONFIG } from '@/config/company';
+import { useScrollTo } from '@/hooks/useScrollTo';
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const { scrollToSection: scrollTo } = useScrollTo();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -35,10 +37,7 @@ const Navbar = () => {
 
   const scrollToSection = (sectionId: string) => {
     handleCloseNavMenu();
-    const element = document.querySelector(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollTo(sectionId);
   };
 
   return (

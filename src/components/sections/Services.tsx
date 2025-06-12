@@ -4,6 +4,7 @@ import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/materi
 import { motion } from 'framer-motion';
 import IconRenderer from '@/components/ui/IconRenderer';
 import { COMPANY_CONFIG } from '@/config/company';
+import { useScrollTo } from '@/hooks/useScrollTo';
 
 const cardVariants = {
   offscreen: {
@@ -22,6 +23,7 @@ const cardVariants = {
 };
 
 const Services = () => {
+  const { scrollToSection } = useScrollTo();
   return (
     <Box
       id="services"
@@ -207,12 +209,7 @@ const Services = () => {
                   cursor: 'pointer',
                   transition: 'all 0.3s ease-in-out',
                 }}
-                onClick={() => {
-                  const element = document.querySelector('#contact');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
+                onClick={() => scrollToSection('#contact')}
               >
                 Contactar Ahora
               </motion.button>
@@ -231,12 +228,7 @@ const Services = () => {
                   cursor: 'pointer',
                   transition: 'all 0.3s ease-in-out',
                 }}
-                onClick={() => {
-                  const element = document.querySelector('#products');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
+                onClick={() => scrollToSection('#products')}
               >
                 Ver Productos
               </motion.button>
