@@ -1,5 +1,7 @@
 'use client';
 
+import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { 
   Box, 
   Container, 
@@ -19,8 +21,13 @@ import { motion } from 'framer-motion';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LaunchIcon from '@mui/icons-material/Launch';
-import IconRenderer from '@/components/ui/IconRenderer';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import IconRenderer from '../ui/IconRenderer';
 import { PRODUCTS_CONFIG } from '@/config/company';
+import UseCases from '../products/UseCases';
+import DemoModal from '../products/DemoModal';
+
+type ViewMode = 'products' | 'use-cases';
 
 const cardVariants = {
   offscreen: {
@@ -39,6 +46,9 @@ const cardVariants = {
 };
 
 const Products = () => {
+  const [viewMode, setViewMode] = useState<ViewMode>('products');
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
+  
   const featuredProducts = PRODUCTS_CONFIG.filter(product => product.featured);
   const allProducts = PRODUCTS_CONFIG;
 
@@ -67,6 +77,27 @@ const Products = () => {
         return 'Estado desconocido';
     }
   };
+
+  const handleShowUseCases = () => {
+    setViewMode('use-cases');
+  };
+
+  const handleBackToProducts = () => {
+    setViewMode('products');
+  };
+
+  const handleOpenDemo = () => {
+    setDemoModalOpen(true);
+  };
+
+  const handleCloseDemo = () => {
+    setDemoModalOpen(false);
+  };
+
+  // Mostrar vista de casos de uso si está seleccionada
+  if (viewMode === 'use-cases') {
+    return <UseCases onBack={handleBackToProducts} />;
+  }
 
   return (
     <Box
@@ -268,6 +299,7 @@ const Products = () => {
                             variant="contained"
                             endIcon={<ArrowForwardIcon />}
                             disabled={product.status !== 'available'}
+                            onClick={product.id === 'ai-chatbot' ? handleShowUseCases : undefined}
                             sx={{
                               borderRadius: 2,
                               px: 3,
@@ -275,13 +307,14 @@ const Products = () => {
                               fontWeight: 600,
                             }}
                           >
-                            {product.status === 'available' ? 'Ver Detalles' : 'Próximamente'}
+                            {product.status === 'available' ? 'Ver Casos de Uso' : 'Próximamente'}
                           </Button>
                           
                           {product.status === 'available' && (
                             <Button
                               variant="outlined"
                               endIcon={<LaunchIcon />}
+                              onClick={product.id === 'ai-chatbot' ? handleOpenDemo : undefined}
                               sx={{
                                 borderRadius: 2,
                                 px: 3,
@@ -380,6 +413,7 @@ const Products = () => {
                           variant={product.featured ? 'contained' : 'outlined'}
                           size="small"
                           disabled={product.status !== 'available'}
+                          onClick={product.id === 'ai-chatbot' ? handleShowUseCases : undefined}
                           sx={{
                             borderRadius: 2,
                             fontWeight: 500,
@@ -397,6 +431,9 @@ const Products = () => {
           </>
         )}
       </Container>
+
+      {/* Demo Modal */}
+      <DemoModal open={demoModalOpen} onClose={handleCloseDemo} />
     </Box>
   );
 };
