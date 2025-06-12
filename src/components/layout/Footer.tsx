@@ -293,7 +293,6 @@ const Footer = () => {
                 fontSize: '0.875rem',
               }}
             >
-              Hecho con ❤️ para transformar el futuro
             </Typography>
           </Box>
         </motion.div>

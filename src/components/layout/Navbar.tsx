@@ -89,58 +89,6 @@ const Navbar = () => {
             </Typography>
           </Box>
 
-          {/* Mobile Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              sx={{ color: trigger ? 'primary.main' : 'white' }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-                '& .MuiPaper-root': {
-                  borderRadius: 2,
-                  mt: 1,
-                  boxShadow: '0px 8px 32px rgba(0, 0, 0, 0.12)',
-                },
-              }}
-            >
-              {COMPANY_CONFIG.navigation.map((page) => (
-                <MenuItem 
-                  key={page.title} 
-                  onClick={() => scrollToSection(page.href)}
-                  sx={{
-                    '&:hover': {
-                      bgcolor: 'grey.50',
-                    },
-                  }}
-                >
-                  <Typography textAlign="center" fontWeight={500}>
-                    {page.title}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-
           {/* Logo - Mobile */}
           <Box
             component={motion.div}
@@ -172,6 +120,58 @@ const Navbar = () => {
             >
               {COMPANY_CONFIG.name}
             </Typography>
+          </Box>
+
+          {/* Mobile Menu */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              sx={{ color: trigger ? 'primary.main' : 'white' }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+                '& .MuiPaper-root': {
+                  borderRadius: 2,
+                  mt: 1,
+                  boxShadow: '0px 8px 32px rgba(0, 0, 0, 0.12)',
+                },
+              }}
+            >
+              {COMPANY_CONFIG.navigation.map((page) => (
+                <MenuItem 
+                  key={page.title} 
+                  onClick={() => scrollToSection(page.href)}
+                  sx={{
+                    '&:hover': {
+                      bgcolor: 'grey.50',
+                    },
+                  }}
+                >
+                  <Typography textAlign="center" fontWeight={500}>
+                    {page.title}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
           </Box>
 
           {/* Desktop Menu */}

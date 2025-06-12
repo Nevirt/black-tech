@@ -33,6 +33,7 @@ const Hero = () => {
         position: 'relative',
         overflow: 'hidden',
         background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%)',
+        pt: { xs: '80px', md: 0 }, // Padding-top solo en móvil para evitar solapamiento con navbar
       }}
     >
       <ParticlesBackground />
