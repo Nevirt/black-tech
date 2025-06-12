@@ -33,6 +33,7 @@ import PeopleIcon from '@mui/icons-material/People';
 
 interface UseCasesProps {
   onBack: () => void;
+  onOpenDemo: () => void;
 }
 
 const useCases = [
@@ -123,7 +124,7 @@ const stats = [
   { label: 'Satisfaccion del Cliente', value: '95%', icon: PeopleIcon }
 ];
 
-const UseCases: React.FC<UseCasesProps> = ({ onBack }) => {
+const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
   const cardVariants = {
     offscreen: { y: 50, opacity: 0 },
     onscreen: {
@@ -366,11 +367,11 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack }) => {
               <Button
                 variant="contained"
                 size="large"
-                onClick={onBack}
+                onClick={onOpenDemo}
                 sx={{
                   px: 4,
                   py: 1.5,
-                  fontSize: '1.1rem',
+                  fontSize: { xs: '0.9rem', sm: '1.1rem' },
                   fontWeight: 600,
                   borderRadius: 2
                 }}
@@ -380,15 +381,16 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack }) => {
               <Button
                 variant="outlined"
                 size="large"
+                onClick={onBack}
                 sx={{
                   px: 4,
                   py: 1.5,
-                  fontSize: '1.1rem',
+                  fontSize: { xs: '0.9rem', sm: '1.1rem' },
                   fontWeight: 600,
                   borderRadius: 2
                 }}
               >
-                Solicitar Cotizacion
+                Ver Productos
               </Button>
             </Box>
           </Paper>

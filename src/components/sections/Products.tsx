@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
 import { 
   Box, 
   Container, 
@@ -21,7 +20,6 @@ import { motion } from 'framer-motion';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LaunchIcon from '@mui/icons-material/Launch';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import IconRenderer from '../ui/IconRenderer';
 import { PRODUCTS_CONFIG } from '@/config/company';
 import UseCases from '../products/UseCases';
@@ -96,7 +94,7 @@ const Products = () => {
 
   // Mostrar vista de casos de uso si está seleccionada
   if (viewMode === 'use-cases') {
-    return <UseCases onBack={handleBackToProducts} />;
+    return <UseCases onBack={handleBackToProducts} onOpenDemo={handleOpenDemo} />;
   }
 
   return (

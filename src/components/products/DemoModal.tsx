@@ -257,9 +257,10 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: 3,
-          height: '90vh',
-          maxHeight: '900px',
+          borderRadius: { xs: 0, sm: 3 },
+          height: { xs: '100vh', sm: '90vh' },
+          maxHeight: { xs: '100vh', sm: '900px' },
+          margin: { xs: 0, sm: 2 },
         },
       }}
     >
@@ -268,10 +269,15 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
         justifyContent: 'space-between', 
         alignItems: 'center',
         pb: 2,
+        px: { xs: 2, sm: 3 },
         borderBottom: '1px solid',
         borderColor: 'divider'
       }}>
-        <Typography variant="h5" fontWeight={600}>
+        <Typography 
+          variant="h5" 
+          fontWeight={600}
+          sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }}
+        >
           Demo Interactivo - Bot de WhatsApp
         </Typography>
         <IconButton onClick={handleClose}>
@@ -280,8 +286,16 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
       </DialogTitle>
 
       <DialogContent sx={{ p: 0, height: '100%' }}>
-        <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+        <Box sx={{ p: { xs: 2, sm: 3 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <Stepper 
+            activeStep={activeStep} 
+            sx={{ 
+              mb: 4,
+              '& .MuiStepLabel-label': {
+                fontSize: { xs: '0.8rem', sm: '1rem' }
+              }
+            }}
+          >
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -301,10 +315,10 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                   transition={{ duration: 0.3 }}
                 >
                   <Card elevation={0} sx={{ border: '1px solid', borderColor: 'divider', mb: 3 }}>
-                    <CardContent sx={{ p: 4 }}>
+                    <CardContent sx={{ p: { xs: 2, sm: 4 } }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                         <BusinessIcon sx={{ mr: 2, color: 'primary.main' }} />
-                        <Typography variant="h6" fontWeight={600}>
+                        <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
                           Configuracion de tu Empresa
                         </Typography>
                       </Box>
@@ -353,16 +367,16 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                   transition={{ duration: 0.3 }}
                 >
                   <Card elevation={0} sx={{ border: '1px solid', borderColor: 'divider', mb: 3 }}>
-                    <CardContent sx={{ p: 4 }}>
+                    <CardContent sx={{ p: { xs: 2, sm: 4 } }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                         <InventoryIcon sx={{ mr: 2, color: 'primary.main' }} />
-                        <Typography variant="h6" fontWeight={600}>
+                        <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
                           Catalogo de Productos
                         </Typography>
                       </Box>
 
                       {/* Add Product Form */}
-                      <Box sx={{ mb: 4, p: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
+                      <Box sx={{ mb: 4, p: { xs: 2, sm: 3 }, bgcolor: 'grey.50', borderRadius: 2 }}>
                         <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
                           Agregar Producto
                         </Typography>
@@ -485,7 +499,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                     {/* Chat Header */}
                     <Box
                       sx={{
-                        p: 2,
+                        p: { xs: 1.5, sm: 2 },
                         bgcolor: '#075E54',
                         color: 'white',
                         display: 'flex',
@@ -493,14 +507,18 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                         gap: 2
                       }}
                     >
-                      <Avatar sx={{ bgcolor: '#25D366' }}>
-                        <SmartToyIcon />
+                      <Avatar sx={{ bgcolor: '#25D366', width: { xs: 36, sm: 40 }, height: { xs: 36, sm: 40 } }}>
+                        <SmartToyIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }} />
                       </Avatar>
                       <Box>
-                        <Typography variant="subtitle1" fontWeight={600}>
+                        <Typography 
+                          variant="subtitle1" 
+                          fontWeight={600}
+                          sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}
+                        >
                           {demoConfig.companyName} - Asistente Virtual
                         </Typography>
-                        <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                        <Typography variant="caption" sx={{ opacity: 0.8, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
                           En linea • Bot de WhatsApp
                         </Typography>
                       </Box>
@@ -511,12 +529,12 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                       ref={chatContainerRef}
                       sx={{
                         flexGrow: 1,
-                        p: 2,
+                        p: { xs: 1, sm: 2 },
                         bgcolor: '#E5DDD5',
                         backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Cg fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath opacity=\'.5\' d=\'M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
                         overflow: 'auto',
-                        minHeight: '400px',
-                        maxHeight: '500px'
+                        minHeight: { xs: '300px', sm: '400px' },
+                        maxHeight: { xs: '400px', sm: '500px' }
                       }}
                     >
                       {chatMessages.map((message) => (
@@ -535,7 +553,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                           >
                             <Box
                               sx={{
-                                maxWidth: '80%',
+                                maxWidth: { xs: '90%', sm: '80%' },
                                 display: 'flex',
                                 alignItems: 'flex-end',
                                 gap: 1,
@@ -544,17 +562,20 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                             >
                               <Avatar
                                 sx={{
-                                  width: 28,
-                                  height: 28,
+                                  width: { xs: 24, sm: 28 },
+                                  height: { xs: 24, sm: 28 },
                                   bgcolor: message.sender === 'bot' ? '#25D366' : 'primary.main',
                                 }}
                               >
-                                {message.sender === 'bot' ? <SmartToyIcon fontSize="small" /> : <PersonIcon fontSize="small" />}
+                                {message.sender === 'bot' ? 
+                                  <SmartToyIcon sx={{ fontSize: { xs: '0.8rem', sm: '1rem' } }} /> : 
+                                  <PersonIcon sx={{ fontSize: { xs: '0.8rem', sm: '1rem' } }} />
+                                }
                               </Avatar>
                               <Paper
                                 elevation={1}
                                 sx={{
-                                  p: 2,
+                                  p: { xs: 1.5, sm: 2 },
                                   bgcolor: message.sender === 'user' ? '#DCF8C6' : 'white',
                                   borderRadius: 2,
                                   position: 'relative',
@@ -562,16 +583,23 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                                     content: '""',
                                     position: 'absolute',
                                     bottom: 0,
-                                    [message.sender === 'user' ? 'right' : 'left']: -8,
+                                    [message.sender === 'user' ? 'right' : 'left']: { xs: -6, sm: -8 },
                                     width: 0,
                                     height: 0,
-                                    borderLeft: message.sender === 'user' ? '8px solid #DCF8C6' : '8px solid transparent',
-                                    borderRight: message.sender === 'user' ? '8px solid transparent' : '8px solid white',
-                                    borderTop: '8px solid transparent',
+                                    borderLeft: message.sender === 'user' ? { xs: '6px solid #DCF8C6', sm: '8px solid #DCF8C6' } : { xs: '6px solid transparent', sm: '8px solid transparent' },
+                                    borderRight: message.sender === 'user' ? { xs: '6px solid transparent', sm: '8px solid transparent' } : { xs: '6px solid white', sm: '8px solid white' },
+                                    borderTop: { xs: '6px solid transparent', sm: '8px solid transparent' },
                                   }
                                 }}
                               >
-                                <Typography variant="body2" sx={{ whiteSpace: 'pre-line', lineHeight: 1.4 }}>
+                                <Typography 
+                                  variant="body2" 
+                                  sx={{ 
+                                    whiteSpace: 'pre-line', 
+                                    lineHeight: 1.4,
+                                    fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                                  }}
+                                >
                                   {formatMessage(message.message)}
                                 </Typography>
                                 <Typography
@@ -648,7 +676,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                     </Box>
 
                     {/* Message Input */}
-                    <Box sx={{ p: 2, bgcolor: '#F0F0F0', borderTop: '1px solid', borderColor: 'divider' }}>
+                    <Box sx={{ p: { xs: 1.5, sm: 2 }, bgcolor: '#F0F0F0', borderTop: '1px solid', borderColor: 'divider' }}>
                       <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
                         <TextField
                           fullWidth
@@ -699,12 +727,21 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
           </Box>
 
           {/* Navigation Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            mt: 3,
+            gap: { xs: 1, sm: 2 }
+          }}>
             <Button
               onClick={handleBack}
               disabled={activeStep === 0}
               variant="outlined"
-              sx={{ px: 3 }}
+              size="small"
+              sx={{ 
+                px: { xs: 2, sm: 3 },
+                fontSize: { xs: '0.8rem', sm: '0.875rem' }
+              }}
             >
               Anterior
             </Button>
@@ -716,7 +753,11 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                 disabled={
                   (activeStep === 0 && (!demoConfig.companyName || !demoConfig.industry))
                 }
-                sx={{ px: 3 }}
+                size="small"
+                sx={{ 
+                  px: { xs: 2, sm: 3 },
+                  fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                }}
               >
                 Siguiente
               </Button>
@@ -724,7 +765,11 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
               <Button
                 onClick={resetDemo}
                 variant="outlined"
-                sx={{ px: 3 }}
+                size="small"
+                sx={{ 
+                  px: { xs: 2, sm: 3 },
+                  fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                }}
               >
                 Reiniciar Demo
               </Button>
