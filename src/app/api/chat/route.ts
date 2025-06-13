@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { rateLimiter, getClientIP } from './rate-limiter';
+
+// 🔧 CONFIGURACIÓN DE SEGURIDAD
+// ⚠️ CAMBIA ESTA BANDERA PARA ACTIVAR/DESACTIVAR TODAS LAS MEDIDAS DE SEGURIDAD
+// true = Activar seguridad (producción)
+// false = Desactivar seguridad (desarrollo/testing sin límites)
+const SECURITY_ENABLED = true;
 
 // Configuración de OpenAI
 const openai = new OpenAI({
@@ -103,8 +110,39 @@ function isMessageRelatedToCompany(message: string, companyData: CompanyData): b
 
 export async function POST(request: NextRequest) {
   try {
+    const clientIP = getClientIP(request);
     const body = await request.json();
-    const { messages, companyData } = body;
+    const { messages, companyData, sessionId } = body;
+
+    // ⚡ MEDIDAS DE SEGURIDAD (controladas por SECURITY_ENABLED)
+    if (SECURITY_ENABLED) {
+      // Verificar rate limiting
+      const rateLimitCheck = rateLimiter.checkMessageLimit(clientIP);
+      if (!rateLimitCheck.allowed) {
+        return NextResponse.json(
+          {
+            error: 'Límite de mensajes alcanzado',
+            message: rateLimitCheck.reason,
+            retryAfter: rateLimitCheck.retryAfter
+          },
+          { status: 429 }
+        );
+      }
+
+      // Verificar sesión válida
+      if (sessionId) {
+        const sessionInfo = rateLimiter.getSessionInfo(sessionId);
+        if (!sessionInfo) {
+          return NextResponse.json(
+            { error: 'Sesión no válida o expirada' },
+            { status: 401 }
+          );
+        }
+        
+        // Incrementar contador de mensajes de la sesión
+        rateLimiter.incrementMessage(sessionId);
+      }
+    }
 
     // Validaciones de seguridad
     if (!messages || !Array.isArray(messages)) {
@@ -121,31 +159,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verificar límite de mensajes
-    if (messages.length > MAX_MESSAGES) {
-      return NextResponse.json(
-        { 
-          error: 'Límite de conversación alcanzado',
-          message: `Has alcanzado el límite de ${MAX_MESSAGES} mensajes en esta conversación. Por favor, inicia una nueva conversación para continuar.`
-        },
-        { status: 429 }
-      );
-    }
+    // ⚡ LÍMITES DE MENSAJES Y VALIDACIONES (controladas por SECURITY_ENABLED)
+    if (SECURITY_ENABLED) {
+      // Verificar límite de mensajes
+      if (messages.length > MAX_MESSAGES) {
+        return NextResponse.json(
+          { 
+            error: 'Límite de conversación alcanzado',
+            message: `Has alcanzado el límite de ${MAX_MESSAGES} mensajes en esta conversación. Por favor, inicia una nueva conversación para continuar.`
+          },
+          { status: 429 }
+        );
+      }
 
-    // Obtener el último mensaje del usuario
-    const lastUserMessage = messages[messages.length - 1];
-    if (!lastUserMessage || lastUserMessage.role !== 'user') {
-      return NextResponse.json(
-        { error: 'Mensaje de usuario requerido' },
-        { status: 400 }
-      );
-    }
+      // Obtener el último mensaje del usuario
+      const lastUserMessage = messages[messages.length - 1];
+      if (!lastUserMessage || lastUserMessage.role !== 'user') {
+        return NextResponse.json(
+          { error: 'Mensaje de usuario requerido' },
+          { status: 400 }
+        );
+      }
 
-    // Validar que el mensaje esté relacionado con la empresa
-    if (!isMessageRelatedToCompany(lastUserMessage.content, companyData)) {
-      return NextResponse.json({
-        message: `Lo siento, solo puedo ayudarte con información sobre ${companyData.companyName} y nuestros productos/servicios. ¿En qué puedo asistirte relacionado con nuestra empresa?`
-      });
+      // Validar que el mensaje esté relacionado con la empresa
+      if (!isMessageRelatedToCompany(lastUserMessage.content, companyData)) {
+        return NextResponse.json({
+          message: `Lo siento, solo puedo ayudarte con información sobre ${companyData.companyName} y nuestros productos/servicios. ¿En qué puedo asistirte relacionado con nuestra empresa?`
+        });
+      }
     }
 
     // Crear el system prompt con los datos de la empresa
@@ -157,11 +198,11 @@ export async function POST(request: NextRequest) {
       ...messages.slice(-5) // Solo los últimos 5 mensajes para mantener contexto
     ];
 
-    // Llamada a OpenAI con límites de tokens
+    // Llamada a OpenAI con límites de tokens (condicionales)
     const completion = await openai.chat.completions.create({
       model: 'gpt-4.1-nano',
       messages: openaiMessages,
-      max_tokens: MAX_TOKENS_PER_MESSAGE,
+      max_tokens: SECURITY_ENABLED ? MAX_TOKENS_PER_MESSAGE : 1000, // Sin límite estricto si seguridad desactivada
       temperature: 0.7,
       presence_penalty: 0.1,
       frequency_penalty: 0.1,
@@ -176,20 +217,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verificación adicional de seguridad en la respuesta
-    const lowerResponse = assistantMessage.toLowerCase();
-    const companyName = companyData.companyName.toLowerCase();
-    
-    // Si la respuesta no menciona la empresa o parece fuera de contexto, usar respuesta de seguridad
-    if (!lowerResponse.includes(companyName) && 
-        !lowerResponse.includes('producto') && 
-        !lowerResponse.includes('servicio') &&
-        !lowerResponse.includes('empresa') &&
-        !lowerResponse.includes('ayuda')) {
+    // ⚡ VERIFICACIÓN ADICIONAL DE SEGURIDAD EN LA RESPUESTA (controlada por SECURITY_ENABLED)
+    if (SECURITY_ENABLED) {
+      const lowerResponse = assistantMessage.toLowerCase();
+      const companyName = companyData.companyName.toLowerCase();
       
-      return NextResponse.json({
-        message: `Como asistente de ${companyData.companyName}, estoy aquí para ayudarte con información sobre nuestros productos y servicios. ¿En qué puedo asistirte específicamente?`
-      });
+      // Si la respuesta no menciona la empresa o parece fuera de contexto, usar respuesta de seguridad
+      if (!lowerResponse.includes(companyName) && 
+          !lowerResponse.includes('producto') && 
+          !lowerResponse.includes('servicio') &&
+          !lowerResponse.includes('empresa') &&
+          !lowerResponse.includes('ayuda')) {
+        
+        return NextResponse.json({
+          message: `Como asistente de ${companyData.companyName}, estoy aquí para ayudarte con información sobre nuestros productos y servicios. ¿En qué puedo asistirte específicamente?`
+        });
+      }
     }
 
     return NextResponse.json({

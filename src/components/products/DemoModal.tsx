@@ -1,5 +1,11 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
+
+// 🔧 CONFIGURACIÓN DE SEGURIDAD
+// ⚠️ CAMBIA ESTA BANDERA PARA ACTIVAR/DESACTIVAR LÍMITES EN EL FRONTEND
+// true = Activar límites (producción)
+// false = Desactivar límites (desarrollo/testing sin restricciones)
+const SECURITY_ENABLED = true;
 import {
   Dialog,
   DialogTitle,
@@ -22,7 +28,7 @@ import {
   ListItem,
   ListItemText,
   InputAdornment,
-  Divider,
+  Alert,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
@@ -30,10 +36,10 @@ import SmartToyIcon from '@mui/icons-material/SmartToy';
 import PersonIcon from '@mui/icons-material/Person';
 import BusinessIcon from '@mui/icons-material/Business';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import ChatIcon from '@mui/icons-material/Chat';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSessionManager } from '../../hooks/useSessionManager';
 
 interface Product {
   id: string;
@@ -81,7 +87,34 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
   const [isLimitReached, setIsLimitReached] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  // Hook de gestión de sesiones
+  const {
+    sessionId,
+    createSession,
+    requestReset,
+  } = useSessionManager();
+
   const steps = ['Configurar Empresa', 'Agregar Productos', 'Demo del Chat'];
+
+  // Inicializar chat con sesión
+  const initializeChat = async () => {
+    if (!sessionId) {
+      const success = await createSession();
+      if (!success) {
+        return;
+      }
+    }
+
+    setChatMessages([{
+      id: '1',
+      sender: 'bot',
+      message: `¡Hola! Bienvenido a ${demoConfig.companyName} 👋\n\nSoy tu asistente virtual especializado en ${demoConfig.industry}. ¿En que puedo ayudarte hoy?`,
+      timestamp: new Date(),
+      role: 'assistant',
+    }]);
+    setMessageCount(1);
+    setIsLimitReached(false);
+  };
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
@@ -92,8 +125,8 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
 
   const generateBotResponseWithOpenAI = async (userMessage: string): Promise<string> => {
     try {
-      // Verificar límite de mensajes
-      if (messageCount >= 10) {
+      // ⚡ VERIFICAR LÍMITE DE MENSAJES (controlado por SECURITY_ENABLED)
+      if (SECURITY_ENABLED && messageCount >= 10) {
         setIsLimitReached(true);
         return 'Has alcanzado el límite de 10 mensajes en esta conversación. Por favor, reinicia el demo para continuar probando el asistente.';
       }
@@ -119,7 +152,8 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
         },
         body: JSON.stringify({
           messages: apiMessages,
-          companyData: demoConfig
+          companyData: demoConfig,
+          sessionId: sessionId
         }),
       });
 
@@ -149,15 +183,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
       
       // Initialize chat when reaching the chat step
       if (activeStep === 1) {
-        setChatMessages([{
-          id: '1',
-          sender: 'bot',
-          message: `¡Hola! Bienvenido a ${demoConfig.companyName} 👋\n\nSoy tu asistente virtual especializado en ${demoConfig.industry}. ¿En que puedo ayudarte hoy?`,
-          timestamp: new Date(),
-          role: 'assistant',
-        }]);
-        setMessageCount(1);
-        setIsLimitReached(false);
+        initializeChat();
       }
     }
   };
@@ -176,82 +202,65 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
         price: parseFloat(newProduct.price),
         description: newProduct.description,
       };
-      setDemoConfig(prev => ({
-        ...prev,
-        products: [...prev.products, product],
-      }));
+      setDemoConfig(prev => ({ ...prev, products: [...prev.products, product] }));
       setNewProduct({ name: '', price: '', description: '' });
     }
   };
 
   const removeProduct = (id: string) => {
-    setDemoConfig(prev => ({
-      ...prev,
-      products: prev.products.filter(p => p.id !== id),
-    }));
+    setDemoConfig(prev => ({ ...prev, products: prev.products.filter(p => p.id !== id) }));
   };
 
   const sendMessage = async () => {
-    if (!currentMessage.trim() || isLimitReached) return;
+    if (!currentMessage.trim() || isTyping || (SECURITY_ENABLED && isLimitReached)) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       sender: 'user',
-      message: currentMessage,
+      message: currentMessage.trim(),
       timestamp: new Date(),
       role: 'user',
     };
 
     setChatMessages(prev => [...prev, userMessage]);
-    const messageToProcess = currentMessage;
     setCurrentMessage('');
     setIsTyping(true);
-    setMessageCount(prev => prev + 1);
 
     try {
-      const botResponseText = await generateBotResponseWithOpenAI(messageToProcess);
+      const botResponse = await generateBotResponseWithOpenAI(currentMessage.trim());
       
-      const botResponse: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        sender: 'bot',
-        message: botResponseText,
-        timestamp: new Date(),
-        role: 'assistant',
-      };
-      
-      setChatMessages(prev => [...prev, botResponse]);
-      setMessageCount(prev => prev + 1);
+      setTimeout(() => {
+        const botMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          sender: 'bot',
+          message: botResponse,
+          timestamp: new Date(),
+          role: 'assistant',
+        };
+
+        setChatMessages(prev => [...prev, botMessage]);
+        setMessageCount(prev => prev + 1);
+        setIsTyping(false);
+      }, 1000 + Math.random() * 2000);
+
     } catch (error) {
       console.error('Error sending message:', error);
-      const errorResponse: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        sender: 'bot',
-        message: `Como asistente de ${demoConfig.companyName}, estoy aquí para ayudarte. Por favor, intenta nuevamente.`,
-        timestamp: new Date(),
-        role: 'assistant',
-      };
-      setChatMessages(prev => [...prev, errorResponse]);
-    } finally {
       setIsTyping(false);
     }
   };
 
-  const resetDemo = () => {
-    setActiveStep(0);
-    setDemoConfig({
-      companyName: '',
-      industry: '',
-      products: [],
-    });
-    setChatMessages([]);
-    setCurrentMessage('');
-    setNewProduct({ name: '', price: '', description: '' });
-    setMessageCount(0);
-    setIsLimitReached(false);
+  const resetDemo = async () => {
+    const success = await requestReset();
+    if (success) {
+      setChatMessages([]);
+      setMessageCount(0);
+      setIsLimitReached(false);
+      setCurrentMessage('');
+      initializeChat();
+    }
   };
 
   const handleClose = () => {
-    resetDemo();
     onClose();
   };
 
@@ -500,41 +509,51 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                   transition={{ duration: 0.3 }}
                   style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                 >
-                  {/* WhatsApp-style Chat Interface */}
+                  {/* Alerta de límite alcanzado */}
+                  {SECURITY_ENABLED && isLimitReached && (
+                    <Alert 
+                      severity="warning" 
+                      sx={{ mb: 2 }}
+                      action={
+                        <Button color="inherit" size="small" onClick={resetDemo}>
+                          Reiniciar Demo
+                        </Button>
+                      }
+                    >
+                      Has alcanzado el límite de mensajes de la demo. Reinicia para continuar probando.
+                    </Alert>
+                  )}
+
+                  {/* Chat Interface */}
                   <Paper
-                    elevation={1}
+                    elevation={3}
                     sx={{
-                      height: '100%',
+                      flex: 1,
                       display: 'flex',
                       flexDirection: 'column',
                       borderRadius: 3,
-                      overflow: 'hidden'
+                      overflow: 'hidden',
+                      minHeight: '500px'
                     }}
                   >
                     {/* Chat Header */}
-                    <Box
-                      sx={{
-                        p: { xs: 1.5, sm: 2 },
-                        bgcolor: '#075E54',
-                        color: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2
-                      }}
-                    >
-                      <Avatar sx={{ bgcolor: '#25D366', width: { xs: 36, sm: 40 }, height: { xs: 36, sm: 40 } }}>
-                        <SmartToyIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }} />
+                    <Box sx={{
+                      p: { xs: 2, sm: 3 },
+                      bgcolor: '#075E54',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2
+                    }}>
+                      <Avatar sx={{ bgcolor: '#25D366' }}>
+                        <SmartToyIcon />
                       </Avatar>
-                      <Box>
-                        <Typography 
-                          variant="subtitle1" 
-                          fontWeight={600}
-                          sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}
-                        >
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.1rem' } }}>
                           {demoConfig.companyName} - Asistente Virtual
                         </Typography>
                         <Typography variant="caption" sx={{ opacity: 0.8, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
-                          En línea • Bot de WhatsApp • {messageCount}/10 mensajes
+                          En línea • Bot de WhatsApp{SECURITY_ENABLED ? ` • ${messageCount}/10 mensajes` : ''}
                         </Typography>
                       </Box>
                     </Box>
@@ -546,7 +565,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                         flexGrow: 1,
                         p: { xs: 1, sm: 2 },
                         bgcolor: '#E5DDD5',
-                        backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Cg fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath opacity=\'.5\' d=\'M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+                        backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Cg fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath opacity=\'.5\' d=\'M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
                         overflow: 'auto',
                         minHeight: { xs: '300px', sm: '400px' },
                         maxHeight: { xs: '400px', sm: '500px' }
@@ -706,25 +725,25 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                               sendMessage();
                             }
                           }}
-                          disabled={isTyping || isLimitReached}
+                          disabled={isTyping || (SECURITY_ENABLED && isLimitReached)}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: 3,
-                              bgcolor: isLimitReached ? 'grey.100' : 'white'
+                              bgcolor: (SECURITY_ENABLED && isLimitReached) ? 'grey.100' : 'white'
                             }
                           }}
                         />
                         <Button
                           variant="contained"
                           onClick={sendMessage}
-                          disabled={!currentMessage.trim() || isTyping || isLimitReached}
+                          disabled={!currentMessage.trim() || isTyping || (SECURITY_ENABLED && isLimitReached)}
                           sx={{
                             minWidth: 'auto',
                             width: 48,
                             height: 48,
                             borderRadius: '50%',
-                            bgcolor: isLimitReached ? 'grey.400' : '#25D366',
-                            '&:hover': { bgcolor: isLimitReached ? 'grey.400' : '#128C7E' }
+                            bgcolor: (SECURITY_ENABLED && isLimitReached) ? 'grey.400' : '#25D366',
+                            '&:hover': { bgcolor: (SECURITY_ENABLED && isLimitReached) ? 'grey.400' : '#128C7E' }
                           }}
                         >
                           <SendIcon />
@@ -732,7 +751,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                       </Box>
 
                       <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block', textAlign: 'center' }}>
-                        {isLimitReached 
+                        {(SECURITY_ENABLED && isLimitReached)
                           ? '⚠️ Límite de mensajes alcanzado. Reinicia el demo para continuar.'
                           : '💡 Prueba escribir: "hola", "productos", "precios", "horarios", "hacer pedido"'
                         }
@@ -783,6 +802,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
               <Button
                 onClick={resetDemo}
                 variant="outlined"
+                disabled={messageCount === 0}
                 size="small"
                 sx={{ 
                   px: { xs: 2, sm: 3 },
