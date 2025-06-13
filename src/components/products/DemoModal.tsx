@@ -48,6 +48,7 @@ interface ChatMessage {
   message: string;
   timestamp: Date;
   typing?: boolean;
+  role?: 'user' | 'assistant';
 }
 
 interface DemoConfig {
@@ -76,6 +77,8 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [messageCount, setMessageCount] = useState(0);
+  const [isLimitReached, setIsLimitReached] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const steps = ['Configurar Empresa', 'Agregar Productos', 'Demo del Chat'];
@@ -87,64 +90,54 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
     }
   }, [chatMessages]);
 
-  const generateBotResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    // Saludo
-    if (lowerMessage.includes('hola') || lowerMessage.includes('buenas') || lowerMessage.includes('buenos dias')) {
-      return `¡Hola! Bienvenido a ${demoConfig.companyName} 👋\n\nSoy tu asistente virtual especializado en ${demoConfig.industry}. Estoy aqui para ayudarte con:\n\n• Informacion de productos 📦\n• Realizar pedidos 🛒\n• Consultas sobre precios 💰\n• Horarios y ubicacion 📍\n• Y mucho mas!\n\n¿En que te puedo ayudar hoy?`;
-    }
-    
-    // Productos
-    if (lowerMessage.includes('producto') || lowerMessage.includes('catalogo') || lowerMessage.includes('que venden')) {
-      if (demoConfig.products.length === 0) {
-        return 'Actualmente no tenemos productos configurados en nuestro catalogo. ¿Te gustaria que te ayude con algo mas?';
+  const generateBotResponseWithOpenAI = async (userMessage: string): Promise<string> => {
+    try {
+      // Verificar límite de mensajes
+      if (messageCount >= 10) {
+        setIsLimitReached(true);
+        return 'Has alcanzado el límite de 10 mensajes en esta conversación. Por favor, reinicia el demo para continuar probando el asistente.';
       }
-      const productList = demoConfig.products.map(p => 
-        `• *${p.name}* - $${p.price}\n  ${p.description}`
-      ).join('\n\n');
-      
-      return `¡Perfecto! 🛍️ Aqui tienes nuestro catalogo de productos:\n\n${productList}\n\n¿Te interesa alguno en particular? Puedo darte mas detalles o ayudarte a hacer un pedido.`;
-    }
-    
-    // Precios
-    if (lowerMessage.includes('precio') || lowerMessage.includes('cuesta') || lowerMessage.includes('vale')) {
-      const productFound = demoConfig.products.find(p => 
-        lowerMessage.includes(p.name.toLowerCase())
-      );
-      if (productFound) {
-        return `El precio de *${productFound.name}* es *$${productFound.price}* 💰\n\n${productFound.description}\n\n¿Te gustaria hacer un pedido o necesitas mas informacion?`;
+
+      // Preparar mensajes para la API
+      const apiMessages = chatMessages
+        .filter(msg => msg.sender !== 'bot' || !msg.typing)
+        .map(msg => ({
+          role: msg.sender === 'user' ? 'user' as const : 'assistant' as const,
+          content: msg.message
+        }));
+
+      // Agregar el mensaje actual del usuario
+      apiMessages.push({
+        role: 'user' as const,
+        content: userMessage
+      });
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: apiMessages,
+          companyData: demoConfig
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          setIsLimitReached(true);
+          return data.message || 'Límite de conversación alcanzado.';
+        }
+        throw new Error(data.error || 'Error en la respuesta');
       }
-      return 'Por favor, especifica que producto te interesa para darte el precio exacto. Puedes escribir "productos" para ver nuestro catalogo completo 📋';
+
+      return data.message;
+    } catch (error) {
+      console.error('Error al generar respuesta:', error);
+      return `Como asistente de ${demoConfig.companyName}, estoy aquí para ayudarte con información sobre nuestros productos y servicios. ¿En qué puedo asistirte?`;
     }
-    
-    // Horarios
-    if (lowerMessage.includes('horario') || lowerMessage.includes('abierto') || lowerMessage.includes('atencion')) {
-      return '🕒 *Nuestros horarios de atencion:*\n\n• Lunes a Viernes: 8:00 AM - 8:00 PM\n• Sabados: 9:00 AM - 6:00 PM\n• Domingos: 10:00 AM - 4:00 PM\n\n¡Pero como soy un asistente virtual, puedo atenderte las 24 horas! 🤖\n\n¿En que mas puedo ayudarte?';
-    }
-    
-    // Pedidos
-    if (lowerMessage.includes('pedido') || lowerMessage.includes('comprar') || lowerMessage.includes('ordenar')) {
-      return '¡Excelente! 🛒 Me encanta ayudarte con tu pedido.\n\nPara procesar tu orden necesito:\n\n1️⃣ ¿Que producto(s) te interesa(n)?\n2️⃣ ¿Cuantas unidades?\n3️⃣ Tu nombre completo\n4️⃣ Numero de telefono\n5️⃣ Direccion de entrega\n\n¿Podrias proporcionarme esta informacion?';
-    }
-    
-    // Entrega
-    if (lowerMessage.includes('entrega') || lowerMessage.includes('envio') || lowerMessage.includes('delivery')) {
-      return '🚚 *Informacion de entregas:*\n\n• *Zona urbana:* 1-2 dias habiles\n• *Zona metropolitana:* 2-3 dias habiles\n• *Interior del pais:* 3-5 dias habiles\n\n💰 *Costo de envio:*\n• Gratis en compras mayores a $50\n• $5 en compras menores\n\n¿Necesitas mas informacion sobre nuestro servicio de entrega?';
-    }
-    
-    // Pago
-    if (lowerMessage.includes('pago') || lowerMessage.includes('forma de pago') || lowerMessage.includes('tarjeta')) {
-      return '💳 *Formas de pago disponibles:*\n\n• Tarjetas de credito/debito 💳\n• Transferencias bancarias 🏦\n• PayPal 💸\n• Efectivo contra entrega 💵\n• Pago en tienda fisica 🏪\n\n¿Cual metodo prefieres para tu compra?';
-    }
-    
-    // Contacto
-    if (lowerMessage.includes('contacto') || lowerMessage.includes('telefono') || lowerMessage.includes('ubicacion')) {
-      return `📞 *Informacion de contacto:*\n\n• *WhatsApp:* Este mismo numero\n• *Email:* info@${demoConfig.companyName.toLowerCase().replace(/\s/g, '')}.com\n• *Telefono:* +1 (555) 123-4567\n• *Direccion:* Av. Principal 123, Ciudad\n\n🕒 *Atencion al cliente:*\n• Chat: 24/7 via WhatsApp\n• Telefono: Lun-Vie 8AM-8PM\n\n¿Hay algo especifico en lo que pueda ayudarte?`;
-    }
-    
-    // Respuesta generica
-    return `Entiendo tu consulta: "${userMessage}" 🤔\n\nComo asistente de *${demoConfig.companyName}*, puedo ayudarte con:\n\n• Ver productos (escribe "productos") 🛍️\n• Informacion de precios 💰\n• Realizar pedidos 🛒\n• Horarios y contacto 📞\n• Formas de pago y entrega 🚚\n\n¿Sobre cual de estos temas te gustaria saber mas?`;
   };
 
   const handleNext = () => {
@@ -161,7 +154,10 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
           sender: 'bot',
           message: `¡Hola! Bienvenido a ${demoConfig.companyName} 👋\n\nSoy tu asistente virtual especializado en ${demoConfig.industry}. ¿En que puedo ayudarte hoy?`,
           timestamp: new Date(),
+          role: 'assistant',
         }]);
+        setMessageCount(1);
+        setIsLimitReached(false);
       }
     }
   };
@@ -196,31 +192,48 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
   };
 
   const sendMessage = async () => {
-    if (!currentMessage.trim()) return;
+    if (!currentMessage.trim() || isLimitReached) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       sender: 'user',
       message: currentMessage,
       timestamp: new Date(),
+      role: 'user',
     };
 
     setChatMessages(prev => [...prev, userMessage]);
     const messageToProcess = currentMessage;
     setCurrentMessage('');
     setIsTyping(true);
+    setMessageCount(prev => prev + 1);
 
-    // Simulate typing delay
-    setTimeout(() => {
+    try {
+      const botResponseText = await generateBotResponseWithOpenAI(messageToProcess);
+      
       const botResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         sender: 'bot',
-        message: generateBotResponse(messageToProcess),
+        message: botResponseText,
         timestamp: new Date(),
+        role: 'assistant',
       };
+      
       setChatMessages(prev => [...prev, botResponse]);
+      setMessageCount(prev => prev + 1);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorResponse: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot',
+        message: `Como asistente de ${demoConfig.companyName}, estoy aquí para ayudarte. Por favor, intenta nuevamente.`,
+        timestamp: new Date(),
+        role: 'assistant',
+      };
+      setChatMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const resetDemo = () => {
@@ -233,6 +246,8 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
     setChatMessages([]);
     setCurrentMessage('');
     setNewProduct({ name: '', price: '', description: '' });
+    setMessageCount(0);
+    setIsLimitReached(false);
   };
 
   const handleClose = () => {
@@ -519,7 +534,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                           {demoConfig.companyName} - Asistente Virtual
                         </Typography>
                         <Typography variant="caption" sx={{ opacity: 0.8, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
-                          En linea • Bot de WhatsApp
+                          En línea • Bot de WhatsApp • {messageCount}/10 mensajes
                         </Typography>
                       </Box>
                     </Box>
@@ -691,25 +706,25 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                               sendMessage();
                             }
                           }}
-                          disabled={isTyping}
+                          disabled={isTyping || isLimitReached}
                           sx={{
                             '& .MuiOutlinedInput-root': {
                               borderRadius: 3,
-                              bgcolor: 'white'
+                              bgcolor: isLimitReached ? 'grey.100' : 'white'
                             }
                           }}
                         />
                         <Button
                           variant="contained"
                           onClick={sendMessage}
-                          disabled={!currentMessage.trim() || isTyping}
+                          disabled={!currentMessage.trim() || isTyping || isLimitReached}
                           sx={{
                             minWidth: 'auto',
                             width: 48,
                             height: 48,
                             borderRadius: '50%',
-                            bgcolor: '#25D366',
-                            '&:hover': { bgcolor: '#128C7E' }
+                            bgcolor: isLimitReached ? 'grey.400' : '#25D366',
+                            '&:hover': { bgcolor: isLimitReached ? 'grey.400' : '#128C7E' }
                           }}
                         >
                           <SendIcon />
@@ -717,7 +732,10 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                       </Box>
 
                       <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block', textAlign: 'center' }}>
-                        💡 Prueba escribir: "hola", "productos", "precios", "horarios", "hacer pedido"
+                        {isLimitReached 
+                          ? '⚠️ Límite de mensajes alcanzado. Reinicia el demo para continuar.'
+                          : '💡 Prueba escribir: "hola", "productos", "precios", "horarios", "hacer pedido"'
+                        }
                       </Typography>
                     </Box>
                   </Paper>
