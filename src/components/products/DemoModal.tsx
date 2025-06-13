@@ -70,6 +70,7 @@ interface DemoModalProps {
 
 const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
   const [activeStep, setActiveStep] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const [demoConfig, setDemoConfig] = useState<DemoConfig>({
     companyName: '',
     industry: '',
@@ -115,6 +116,18 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
     setMessageCount(1);
     setIsLimitReached(false);
   };
+
+  // Detectar tamaño de pantalla
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 600);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
@@ -279,12 +292,15 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
       onClose={handleClose}
       maxWidth="lg"
       fullWidth
+      fullScreen={isMobile}
       PaperProps={{
         sx: {
           borderRadius: { xs: 0, sm: 3 },
           height: { xs: '100vh', sm: '90vh' },
           maxHeight: { xs: '100vh', sm: '900px' },
           margin: { xs: 0, sm: 2 },
+          width: { xs: '100%', sm: 'auto' },
+          maxWidth: { xs: '100%', sm: '1200px' }
         },
       }}
     >
@@ -292,31 +308,52 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        pb: 2,
-        px: { xs: 2, sm: 3 },
+        pb: { xs: 1, sm: 2 },
+        px: { xs: 1.5, sm: 3 },
         borderBottom: '1px solid',
-        borderColor: 'divider'
+        borderColor: 'divider',
+        minHeight: { xs: '56px', sm: 'auto' }
       }}>
         <Typography 
           variant="h5" 
           fontWeight={600}
-          sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }}
+          sx={{ 
+            fontSize: { xs: '1.1rem', sm: '1.5rem' },
+            lineHeight: 1.2
+          }}
         >
           Demo Interactivo - Bot de WhatsApp
         </Typography>
-        <IconButton onClick={handleClose}>
+        <IconButton 
+          onClick={handleClose}
+          sx={{ 
+            p: { xs: 1, sm: 1.5 },
+            '& .MuiSvgIcon-root': {
+              fontSize: { xs: '20px', sm: '24px' }
+            }
+          }}
+        >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ p: 0, height: '100%' }}>
-        <Box sx={{ p: { xs: 2, sm: 3 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <DialogContent sx={{ p: 0, height: '100%', overflow: 'hidden' }}>
+        <Box sx={{ 
+          p: { xs: 1, sm: 3 }, 
+          height: '100%', 
+          display: 'flex', 
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}>
           <Stepper 
             activeStep={activeStep} 
             sx={{ 
-              mb: 4,
+              mb: { xs: 2, sm: 4 },
               '& .MuiStepLabel-label': {
-                fontSize: { xs: '0.8rem', sm: '1rem' }
+                fontSize: { xs: '0.75rem', sm: '1rem' }
+              },
+              '& .MuiStepIcon-root': {
+                fontSize: { xs: '1.2rem', sm: '1.5rem' }
               }
             }}
           >
@@ -531,28 +568,66 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                       flex: 1,
                       display: 'flex',
                       flexDirection: 'column',
-                      borderRadius: 3,
+                      borderRadius: { xs: 2, sm: 3 },
                       overflow: 'hidden',
-                      minHeight: '500px'
+                      minHeight: { xs: 'calc(100vh - 200px)', sm: '500px' },
+                      maxHeight: { xs: 'calc(100vh - 200px)', sm: '600px' },
+                      border: '1px solid #E4E6EA'
                     }}
                   >
                     {/* Chat Header */}
                     <Box sx={{
-                      p: { xs: 2, sm: 3 },
+                      p: { xs: 2, sm: 2.5 },
                       bgcolor: '#075E54',
                       color: 'white',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 2
+                      gap: 2,
+                      borderBottom: '1px solid rgba(255,255,255,0.1)'
                     }}>
-                      <Avatar sx={{ bgcolor: '#25D366' }}>
-                        <SmartToyIcon />
+                      <Avatar sx={{ 
+                        bgcolor: '#25D366',
+                        width: { xs: 40, sm: 44 },
+                        height: { xs: 40, sm: 44 },
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}>
+                        <SmartToyIcon sx={{ fontSize: { xs: '20px', sm: '22px' } }} />
                       </Avatar>
                       <Box sx={{ flex: 1 }}>
-                        <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.1rem' } }}>
+                        <Typography 
+                          variant="h6" 
+                          sx={{ 
+                            fontSize: { xs: '1rem', sm: '1.1rem' },
+                            fontWeight: 600,
+                            lineHeight: 1.2
+                          }}
+                        >
                           {demoConfig.companyName} - Asistente Virtual
                         </Typography>
-                        <Typography variant="caption" sx={{ opacity: 0.8, fontSize: { xs: '0.7rem', sm: '0.75rem' } }}>
+                        <Typography 
+                          variant="caption" 
+                          sx={{ 
+                            opacity: 0.85, 
+                            fontSize: { xs: '0.75rem', sm: '0.8rem' },
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5
+                          }}
+                        >
+                          <Box 
+                            sx={{ 
+                              width: 8, 
+                              height: 8, 
+                              borderRadius: '50%', 
+                              bgcolor: '#25D366',
+                              animation: 'pulse 2s infinite',
+                              '@keyframes pulse': {
+                                '0%': { opacity: 1 },
+                                '50%': { opacity: 0.5 },
+                                '100%': { opacity: 1 }
+                              }
+                            }} 
+                          />
                           En línea • Bot de WhatsApp{SECURITY_ENABLED ? ` • ${messageCount}/10 mensajes` : ''}
                         </Typography>
                       </Box>
@@ -562,13 +637,13 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                     <Box
                       ref={chatContainerRef}
                       sx={{
-                        flexGrow: 1,
+                        flex: 1,
                         p: { xs: 1, sm: 2 },
                         bgcolor: '#E5DDD5',
                         backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Cg fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath opacity=\'.5\' d=\'M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
                         overflow: 'auto',
-                        minHeight: { xs: '300px', sm: '400px' },
-                        maxHeight: { xs: '400px', sm: '500px' }
+                        overflowX: 'hidden',
+                        scrollBehavior: 'smooth'
                       }}
                     >
                       {chatMessages.map((message) => (
@@ -710,12 +785,26 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                     </Box>
 
                     {/* Message Input */}
-                    <Box sx={{ p: { xs: 1.5, sm: 2 }, bgcolor: '#F0F0F0', borderTop: '1px solid', borderColor: 'divider' }}>
-                      <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+                    <Box 
+                      sx={{ 
+                        p: { xs: 1.5, sm: 2.5 }, 
+                        bgcolor: '#F0F2F5', 
+                        borderTop: '1px solid #E4E6EA',
+                        minHeight: 'auto',
+                        flexShrink: 0
+                      }}
+                    >
+                      <Box sx={{ 
+                        display: 'flex', 
+                        gap: { xs: 1, sm: 1.5 }, 
+                        alignItems: 'center',
+                        mb: 1
+                      }}>
                         <TextField
                           fullWidth
                           multiline
-                          maxRows={3}
+                          maxRows={4}
+                          minRows={1}
                           placeholder="Escribe un mensaje..."
                           value={currentMessage}
                           onChange={(e) => setCurrentMessage(e.target.value)}
@@ -728,29 +817,90 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                           disabled={isTyping || (SECURITY_ENABLED && isLimitReached)}
                           sx={{
                             '& .MuiOutlinedInput-root': {
-                              borderRadius: 3,
-                              bgcolor: (SECURITY_ENABLED && isLimitReached) ? 'grey.100' : 'white'
+                              borderRadius: '24px',
+                              bgcolor: (SECURITY_ENABLED && isLimitReached) ? '#F5F5F5' : 'white',
+                              border: '1px solid #E4E6EA',
+                              fontSize: { xs: '14px', sm: '15px' },
+                              lineHeight: 1.4,
+                              minHeight: { xs: '44px', sm: '48px' },
+                              '&:hover': {
+                                borderColor: '#25D366'
+                              },
+                              '&.Mui-focused': {
+                                borderColor: '#25D366',
+                                boxShadow: '0 0 0 2px rgba(37, 211, 102, 0.1)'
+                              },
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                border: 'none'
+                              }
+                            },
+                            '& .MuiInputBase-input': {
+                              padding: { xs: '12px 16px', sm: '14px 18px' },
+                              '&::placeholder': {
+                                color: '#8696A0',
+                                opacity: 1
+                              }
                             }
                           }}
                         />
-                        <Button
-                          variant="contained"
-                          onClick={sendMessage}
-                          disabled={!currentMessage.trim() || isTyping || (SECURITY_ENABLED && isLimitReached)}
+                        <Box
                           sx={{
-                            minWidth: 'auto',
-                            width: 48,
-                            height: 48,
-                            borderRadius: '50%',
-                            bgcolor: (SECURITY_ENABLED && isLimitReached) ? 'grey.400' : '#25D366',
-                            '&:hover': { bgcolor: (SECURITY_ENABLED && isLimitReached) ? 'grey.400' : '#128C7E' }
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0
                           }}
                         >
-                          <SendIcon />
-                        </Button>
+                          <Button
+                            variant="contained"
+                            onClick={sendMessage}
+                            disabled={!currentMessage.trim() || isTyping || (SECURITY_ENABLED && isLimitReached)}
+                            sx={{
+                              minWidth: 'auto',
+                              width: { xs: 44, sm: 48 },
+                              height: { xs: 44, sm: 48 },
+                              borderRadius: '50%',
+                              padding: 0,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              bgcolor: (SECURITY_ENABLED && isLimitReached) ? '#BDC3C7' : '#25D366',
+                              boxShadow: '0 2px 8px rgba(37, 211, 102, 0.3)',
+                              transition: 'all 0.2s ease-in-out',
+                              '&:hover': { 
+                                bgcolor: (SECURITY_ENABLED && isLimitReached) ? '#BDC3C7' : '#128C7E',
+                                boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)',
+                                transform: 'scale(1.05)'
+                              },
+                              '&:active': {
+                                transform: 'scale(0.95)'
+                              },
+                              '&.Mui-disabled': {
+                                bgcolor: '#BDC3C7',
+                                boxShadow: 'none'
+                              }
+                            }}
+                          >
+                            <SendIcon sx={{ 
+                              fontSize: { xs: '18px', sm: '20px' },
+                              color: 'white'
+                            }} />
+                          </Button>
+                        </Box>
                       </Box>
 
-                      <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block', textAlign: 'center' }}>
+                      <Typography 
+                        variant="caption" 
+                        color="text.secondary" 
+                        sx={{ 
+                          display: 'block', 
+                          textAlign: 'center',
+                          fontSize: { xs: '11px', sm: '12px' },
+                          color: '#8696A0',
+                          lineHeight: 1.3,
+                          px: 1
+                        }}
+                      >
                         {(SECURITY_ENABLED && isLimitReached)
                           ? '⚠️ Límite de mensajes alcanzado. Reinicia el demo para continuar.'
                           : '💡 Prueba escribir: "hola", "productos", "precios", "horarios", "hacer pedido"'
@@ -767,8 +917,9 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
           <Box sx={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
-            mt: 3,
-            gap: { xs: 1, sm: 2 }
+            mt: { xs: 2, sm: 3 },
+            gap: { xs: 1, sm: 2 },
+            px: { xs: 1, sm: 0 }
           }}>
             <Button
               onClick={handleBack}
