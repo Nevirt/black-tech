@@ -42,42 +42,42 @@ const theme = createTheme({
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontWeight: 700,
-      fontSize: '3.5rem',
-      lineHeight: 1.2,
+      fontSize: '3rem',
+      lineHeight: 1.22,
       letterSpacing: '-0.02em',
     },
     h2: {
       fontWeight: 600,
-      fontSize: '2.5rem',
-      lineHeight: 1.3,
+      fontSize: '2.25rem',
+      lineHeight: 1.28,
       letterSpacing: '-0.01em',
     },
     h3: {
       fontWeight: 600,
-      fontSize: '2rem',
-      lineHeight: 1.4,
+      fontSize: '1.75rem',
+      lineHeight: 1.35,
     },
     h4: {
       fontWeight: 500,
-      fontSize: '1.5rem',
+      fontSize: '1.375rem',
       lineHeight: 1.4,
     },
     h5: {
       fontWeight: 500,
-      fontSize: '1.25rem',
+      fontSize: '1.125rem',
       lineHeight: 1.5,
     },
     h6: {
       fontWeight: 600,
-      fontSize: '1rem',
+      fontSize: '0.95rem',
       lineHeight: 1.5,
     },
     body1: {
-      fontSize: '1rem',
+      fontSize: '0.975rem',
       lineHeight: 1.6,
     },
     body2: {
-      fontSize: '0.875rem',
+      fontSize: '0.85rem',
       lineHeight: 1.5,
     },
     button: {

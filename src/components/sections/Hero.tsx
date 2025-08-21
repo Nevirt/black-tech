@@ -36,7 +36,7 @@ const Hero = () => {
       <ParticlesBackground />
       
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-        <Grid container spacing={4} alignItems="center" sx={{ minHeight: '80vh' }}>
+        <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center" sx={{ minHeight: { xs: 'auto', md: '80vh' }, py: { xs: 6, md: 0 } }}>
           <Grid item xs={12} md={8}>
             <Box sx={{ color: 'white' }}>
               {/* Tagline */}
@@ -48,9 +48,9 @@ const Hero = () => {
                 <Typography
                   variant="body1"
                   sx={{
-                    mb: 2,
+                    mb: 1.5,
                     color: 'grey.400',
-                    fontSize: '1.1rem',
+                    fontSize: '0.95rem',
                     fontWeight: 500,
                     letterSpacing: '0.5px',
                     textTransform: 'uppercase',
@@ -70,9 +70,9 @@ const Hero = () => {
                   variant="h1"
                   sx={{
                     fontWeight: 700,
-                    mb: 3,
-                    fontSize: { xs: '3rem', md: '4.5rem', lg: '5.5rem' },
-                    lineHeight: 1.1,
+                    mb: 2,
+                    fontSize: { xs: '2.25rem', md: '3.5rem', lg: '4.25rem' },
+                    lineHeight: 1.15,
                     background: 'linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
@@ -92,12 +92,12 @@ const Hero = () => {
                 <Typography
                   variant="h5"
                   sx={{
-                    mb: 4,
-                    fontSize: { xs: '1.2rem', md: '1.5rem' },
+                    mb: 3,
+                    fontSize: { xs: '1rem', md: '1.25rem' },
                     fontWeight: 400,
-                    lineHeight: 1.6,
+                    lineHeight: 1.55,
                     color: 'grey.300',
-                    maxWidth: '600px',
+                    maxWidth: '560px',
                   }}
                 >
                   {COMPANY_CONFIG.heroDescription.split('\n\n')[0]}
@@ -113,11 +113,11 @@ const Hero = () => {
                 <Typography
                   variant="body1"
                   sx={{
-                    mb: 5,
-                    fontSize: '1.1rem',
-                    lineHeight: 1.7,
+                    mb: 4,
+                    fontSize: '1rem',
+                    lineHeight: 1.6,
                     color: 'grey.400',
-                    maxWidth: '650px',
+                    maxWidth: '600px',
                   }}
                 >
                   {COMPANY_CONFIG.heroDescription.split('\n\n')[1]}
@@ -130,17 +130,17 @@ const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               >
-                <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'flex', gap: { xs: 1.5, md: 2 }, flexWrap: 'wrap' }}>
                   <Button
                     variant="contained"
-                    size="large"
+                    size="medium"
                     onClick={scrollToProducts}
                     endIcon={<ArrowForwardIcon />}
                     sx={{
-                      px: 4,
-                      py: 2,
+                      px: { xs: 2.25, md: 3 },
+                      py: { xs: 1.1, md: 1.5 },
                       borderRadius: '50px',
-                      fontSize: '1.1rem',
+                      fontSize: { xs: '0.95rem', md: '1rem' },
                       fontWeight: 600,
                       background: 'linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%)',
                       color: 'black',
@@ -157,13 +157,13 @@ const Hero = () => {
                   
                   <Button
                     variant="outlined"
-                    size="large"
+                    size="medium"
                     onClick={scrollToContact}
                     sx={{
-                      px: 4,
-                      py: 2,
+                      px: { xs: 2.25, md: 3 },
+                      py: { xs: 1.1, md: 1.5 },
                       borderRadius: '50px',
-                      fontSize: '1.1rem',
+                      fontSize: { xs: '0.95rem', md: '1rem' },
                       fontWeight: 600,
                       borderColor: 'white',
                       color: 'white',
@@ -184,7 +184,7 @@ const Hero = () => {
           </Grid>
 
           {/* Right side - Visual element */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} sx={{ display: { xs: 'none', md: 'block' } }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -239,42 +239,30 @@ const Hero = () => {
           </Grid>
         </Grid>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          style={{
-            position: 'absolute',
-            bottom: '2rem',
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
-        >
+        {/* Scroll indicator - hidden on mobile */}
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
           <motion.div
-            animate={{
-              y: [0, 10, 0],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              repeatType: 'reverse',
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            style={{
+              position: 'absolute',
+              bottom: '2rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
             }}
           >
-            <KeyboardArrowDownIcon
-              sx={{
-                fontSize: '3rem',
-                color: 'white',
-                cursor: 'pointer',
-                opacity: 0.7,
-                '&:hover': {
-                  opacity: 1,
-                },
-              }}
-              onClick={scrollToProducts}
-            />
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
+            >
+              <KeyboardArrowDownIcon
+                sx={{ fontSize: '3rem', color: 'white', cursor: 'pointer', opacity: 0.7, '&:hover': { opacity: 1 } }}
+                onClick={scrollToProducts}
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </Box>
       </Container>
     </Box>
   );

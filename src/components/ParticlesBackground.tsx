@@ -29,14 +29,14 @@ const ParticlesBackground = () => {
     let animationFrameId: number;
 
     const options: ParticleOptions = {
-      particleColor: "rgba(255,255,255,0.8)",
-      lineColor: "rgba(0,181,255,0.3)",
-      particleAmount: window.innerWidth <= 768 ? 15 : 30,
-      defaultRadius: 2,
-      variantRadius: 2,
-      defaultSpeed: 0.8,
-      variantSpeed: 1,
-      linkRadius: 200
+      particleColor: "rgba(255,255,255,0.7)",
+      lineColor: "rgba(0,181,255,0.22)",
+      particleAmount: window.innerWidth <= 768 ? 10 : 22,
+      defaultRadius: 1.8,
+      variantRadius: 1.5,
+      defaultSpeed: 0.6,
+      variantSpeed: 0.8,
+      linkRadius: 160
     };
 
     const rgb = options.lineColor.match(/\d+/g);
@@ -151,7 +151,7 @@ const ParticlesBackground = () => {
     }
 
     const handleResize = () => {
-      options.particleAmount = window.innerWidth <= 768 ? 15 : 30;
+      options.particleAmount = window.innerWidth <= 768 ? 6 : 22;
       resizeReset();
       initialiseElements();
     };
