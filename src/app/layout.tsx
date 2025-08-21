@@ -14,15 +14,15 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://inzaiq.com'),
-  title: SEO_CONFIG.title,
-  description: SEO_CONFIG.description,
+  title: 'InzaiQ – Innovación en Automatización y SaaS para empresas digitales',
+  description: 'InzaiQ ofrece soluciones SaaS de automatización y generación de contenido con IA para optimizar procesos y ventas online.',
   keywords: SEO_CONFIG.keywords,
   authors: [{ name: SEO_CONFIG.author }],
   openGraph: {
     title: SEO_CONFIG.title,
     description: SEO_CONFIG.description,
     url: SEO_CONFIG.url,
-    siteName: 'InzaiQ',
+    siteName: 'InzaiQ LLC',
     images: [
       {
         url: '/inzaiq-logo.png',

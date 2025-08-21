@@ -1,13 +1,13 @@
 // Configuración centralizada de la empresa
 export const COMPANY_CONFIG = {
   // Información básica de la empresa
-  name: 'InzaiQ',
-  tagline: 'Donde la innovación toma forma.',
+  name: 'InzaiQ LLC',
+  tagline: 'InzaiQ – Innovación en Automatización y SaaS para empresas digitales',
   
   // Descripción principal para el hero
-  heroDescription: `En InzaiQ convertimos tecnología en soluciones que piensan, se adaptan y avanzan contigo.
+  heroDescription: `En InzaiQ ayudamos a empresas y emprendedores a escalar sus negocios con soluciones SaaS basadas en inteligencia artificial. Ofrecemos herramientas de automatización, generación de contenido y otros servicios digitales diseñados para ahorrar tiempo y maximizar resultados.
 
-Desarrollamos herramientas impulsadas por inteligencia artificial que automatizan con precisión, escalan con inteligencia y se integran con visión.
+Automatización, optimización, escalabilidad y soporte confiable: ese es nuestro enfoque para impulsar tu crecimiento.
 
 No seguimos tendencias: las resolvemos. Creamos sistemas que entienden el contexto y se anticipan a lo que viene. Así tu empresa evoluciona, sin fricciones.
 
@@ -15,9 +15,9 @@ Tecnología con propósito. Resultados con dirección.`,
 
   // Información de contacto
   contact: {
-    email: 'info@inzaiq.com',
+    email: 'support@inzaiq.com',
     phone: '+595 976 147913',
-    address: 'San Juan Bautista, Paraguay',
+    address: 'Registered Agents Inc, 30 N Gould St Ste R, Sheridan, WY 82801',
   },
 
   // Enlaces de redes sociales
@@ -117,122 +117,24 @@ Tecnología con propósito. Resultados con dirección.`,
 // Configuración de productos (escalable)
 export const PRODUCTS_CONFIG = [
   {
-    id: 'ai-chatbot',
-    name: 'Bot de Automatización para WhatsApp',
-    category: 'Automatización',
-    description: 'Automatiza completamente tu atención al cliente en WhatsApp con nuestro bot inteligente potenciado por IA. Diseñado específicamente para WhatsApp Business, nuestra solución integra respuestas inteligentes, gestión de productos, procesamiento de pedidos y atención 24/7.',
-    shortDescription: 'Automatización completa de WhatsApp Business con IA',
+    id: 'product-cards-generator',
+    name: 'Generador de fichas de producto e-commerce',
+    category: 'Contenido y Automatización',
+    description: 'Genera fichas de producto optimizadas para e-commerce con IA: títulos, descripciones, bullets y SEO en segundos.',
+    shortDescription: 'Fichas de producto con IA listas para vender',
     features: [
-      {
-        title: 'Automatización WhatsApp Nativa',
-        description: 'Integración completa con WhatsApp Business API para automatización total de conversaciones.',
-        icon: 'Chat',
-      },
-      {
-        title: 'Gestión Inteligente de Productos',
-        description: 'Catálogo automatizado, consultas de precios, disponibilidad y procesamiento de pedidos.',
-        icon: 'Storage',
-      },
-      {
-        title: 'Respuestas Contextuales IA',
-        description: 'IA avanzada que entiende el contexto y proporciona respuestas precisas y naturales.',
-        icon: 'Psychology',
-      },
-      {
-        title: 'Atención 24/7 Automatizada',
-        description: 'Tu negocio nunca duerme. Atiende clientes las 24 horas con respuestas instantáneas.',
-        icon: 'AccessTime',
-      },
-      {
-        title: 'Analytics y Métricas',
-        description: 'Dashboard completo con métricas de conversaciones, ventas y satisfacción del cliente.',
-        icon: 'Analytics',
-      },
-      {
-        title: 'Configuración Sin Código',
-        description: 'Setup completo sin necesidad de programación. Listo para usar en minutos.',
-        icon: 'AutoMode',
-      },
-    ],
-    useCases: [
-      {
-        title: 'Tiendas y E-commerce',
-        description: 'Automatiza consultas de productos, procesa pedidos, confirma disponibilidad y gestiona pagos directamente en WhatsApp.',
-        benefits: ['Ventas 24/7', 'Reducción de carrito abandonado', 'Atención inmediata'],
-        icon: 'Storage',
-      },
-      {
-        title: 'Restaurantes y Delivery',
-        description: 'Recibe pedidos, muestra menús actualizados, confirma direcciones y coordina entregas automáticamente.',
-        benefits: ['Pedidos automatizados', 'Menú siempre actualizado', 'Gestión de delivery'],
-        icon: 'Chat',
-      },
-      {
-        title: 'Servicios Profesionales',
-        description: 'Agenda citas, proporciona información de servicios, confirma disponibilidad y envía recordatorios.',
-        benefits: ['Agenda automatizada', 'Recordatorios automáticos', 'Información instant'],
-        icon: 'AccessTime',
-      },
-      {
-        title: 'Soporte al Cliente',
-        description: 'Resuelve consultas frecuentes, escala casos complejos y mantiene historial de conversaciones.',
-        benefits: ['Resolución inmediata', 'Escalación inteligente', 'Historial completo'],
-        icon: 'Support',
-      },
-      {
-        title: 'Empresas B2B',
-        description: 'Gestiona leads, califica prospectos, programa reuniones y envía propuestas automáticamente.',
-        benefits: ['Calificación de leads', 'Follow-up automático', 'Gestión de pipeline'],
-        icon: 'Hub',
-      },
-      {
-        title: 'Educación y Capacitación',
-        description: 'Proporciona información de cursos, gestiona inscripciones y envía material educativo.',
-        benefits: ['Inscripciones automáticas', 'Material personalizado', 'Recordatorios de clases'],
-        icon: 'Lightbulb',
-      },
+      { title: 'Descripciones SEO', description: 'Texto optimizado para buscadores con tono configurable.', icon: 'Description' },
+      { title: 'Bullets automáticos', description: 'Puntos clave generados según categoría y atributos.', icon: 'Checklist' },
+      { title: 'Exportación CSV', description: 'Listo para Shopify, WooCommerce, VTEX y más.', icon: 'Upload' },
     ],
     benefits: [
-      'Reduce costos operativos hasta un 75%',
-      'Aumenta ventas con atención 24/7',
-      'Mejora satisfacción del cliente',
-      'Procesa pedidos automáticamente',
-      'Escalabilidad ilimitada',
-      'ROI medible y rápido',
+      'Reduce tiempos de carga de catálogo',
+      'Mejora CTR y conversión',
+      'Estandariza la calidad del contenido',
     ],
-    technologies: ['WhatsApp Business API', 'OpenAI GPT-4', 'Natural Language Processing', 'Machine Learning', 'Real-time Analytics'],
-    pricing: {
-      starter: {
-        name: 'Starter',
-        price: '$299',
-        period: '/mes',
-        features: ['Hasta 1,000 conversaciones/mes', 'Integración WhatsApp Business', 'Respuestas básicas IA', 'Soporte por email'],
-      },
-      professional: {
-        name: 'Professional',
-        price: '$599',
-        period: '/mes',
-        features: ['Hasta 5,000 conversaciones/mes', 'Gestión de productos', 'Analytics avanzados', 'Soporte prioritario', 'Personalización completa'],
-      },
-      enterprise: {
-        name: 'Enterprise',
-        price: 'Personalizado',
-        period: '',
-        features: ['Conversaciones ilimitadas', 'Múltiples números WhatsApp', 'Integración CRM/ERP', 'Soporte dedicado', 'SLA garantizado'],
-      },
-    },
-    images: {
-      hero: '/products/whatsapp-bot-hero.png',
-      gallery: [
-        '/products/whatsapp-bot-1.png',
-        '/products/whatsapp-bot-2.png',
-        '/products/whatsapp-bot-3.png',
-      ],
-    },
-    status: 'available', // available, coming-soon, beta
+    status: 'available',
     featured: true,
   },
-  // Aquí se pueden agregar más productos fácilmente
   {
     id: 'data-analytics',
     name: 'Plataforma de Análisis de Datos',

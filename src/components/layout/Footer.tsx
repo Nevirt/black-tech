@@ -26,14 +26,20 @@ const Footer = () => {
 
   const footerLinks = [
     { title: 'Inicio', href: '#home' },
-    { title: 'Nosotros', href: '#about' },
-    { title: 'Productos', href: '#products' },
-    { title: 'Servicios', href: '#services' },
+    { title: 'Nosotros', href: '/about' },
+    { title: 'Servicios', href: '/services' },
+    { title: 'Precios', href: '/pricing' },
+    { title: 'Soporte', href: '/support' },
+    { title: 'Términos y Condiciones', href: '/terms' },
+    { title: 'Política de Privacidad', href: '/privacy' },
+    { title: 'Reembolsos / Cancelación', href: '/refunds' },
     { title: 'Contacto', href: '#contact' },
   ];
 
   const scrollToSection = (sectionId: string) => {
-    scrollTo(sectionId);
+    if (sectionId.startsWith('#')) {
+      scrollTo(sectionId);
+    }
   };
 
   return (
@@ -110,8 +116,7 @@ const Footer = () => {
                   lineHeight: 1.6,
                 }}
               >
-                Transformamos ideas en soluciones tecnológicas que impulsan el futuro.
-                Especialistas en IA y automatización.
+                InzaiQ LLC registrada en Wyoming, EE. UU. Especialistas en IA y automatización.
               </Typography>
 
               <Box sx={{ display: 'flex', gap: 1 }}>
@@ -168,16 +173,17 @@ const Footer = () => {
                     whileHover={{ x: 5 }}
                   >
                     <Link
-                      component="button"
-                      onClick={() => scrollToSection(link.href)}
+                      component={link.href.startsWith('#') ? 'button' : 'a'}
+                      href={!link.href.startsWith('#') ? link.href : undefined}
+                      onClick={link.href.startsWith('#') ? () => scrollToSection(link.href) : undefined}
                       sx={{
                         color: 'white',
                         textDecoration: 'none',
                         opacity: 0.8,
                         fontSize: '1rem',
                         textAlign: 'left',
-                        background: 'none',
-                        border: 'none',
+                        background: link.href.startsWith('#') ? 'none' : undefined,
+                        border: link.href.startsWith('#') ? 'none' : undefined,
                         cursor: 'pointer',
                         padding: '4px 0',
                         transition: 'all 0.3s ease-in-out',
