@@ -21,7 +21,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LaunchIcon from '@mui/icons-material/Launch';
 import IconRenderer from '../ui/IconRenderer';
-import { PRODUCTS_CONFIG } from '@/config/company';
+import { useI18n } from '@/i18n/I18nProvider';
 import UseCases from '../products/UseCases';
 import DemoModal from '../products/DemoModal';
 
@@ -44,11 +44,12 @@ const cardVariants = {
 };
 
 const Products = () => {
+  const { t, products } = useI18n();
   const [viewMode, setViewMode] = useState<ViewMode>('products');
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   
-  const featuredProducts = PRODUCTS_CONFIG.filter(product => product.featured);
-  const allProducts = PRODUCTS_CONFIG;
+  const featuredProducts = products.filter(product => product.featured);
+  const allProducts = products;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -66,13 +67,13 @@ const Products = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'available':
-        return 'Disponible';
+        return t('products.status.available');
       case 'beta':
-        return 'Beta';
+        return t('products.status.beta');
       case 'coming-soon':
-        return 'Próximamente';
+        return t('products.status.coming-soon');
       default:
-        return 'Estado desconocido';
+        return t('products.status.unknown');
     }
   };
 
@@ -131,7 +132,7 @@ const Products = () => {
                 fontSize: { xs: '2.5rem', md: '3.5rem' },
               }}
             >
-              Nuestros Productos
+              {t('products.title')}
             </Typography>
 
             <Typography
@@ -162,7 +163,7 @@ const Products = () => {
                 textAlign: 'center',
               }}
             >
-              Productos Destacados
+              {t('products.featured')}
             </Typography>
 
             <Grid container spacing={4}>
@@ -242,7 +243,7 @@ const Products = () => {
                             color: 'text.primary',
                           }}
                         >
-                          Características Principales
+                          {t('products.mainFeatures')}
                         </Typography>
 
                         <List sx={{ mb: 4 }}>
@@ -277,7 +278,7 @@ const Products = () => {
                                 color: 'text.primary',
                               }}
                             >
-                              Beneficios
+                              {t('products.benefits')}
                             </Typography>
                             <List sx={{ mb: 4 }}>
                               {product.benefits.slice(0, 3).map((benefit, benefitIndex) => (
@@ -311,7 +312,7 @@ const Products = () => {
                               fontWeight: 600,
                             }}
                           >
-                            {product.status === 'available' ? 'Ver Casos de Uso' : 'Próximamente'}
+                            {product.status === 'available' ? t('products.viewUseCases') : t('products.status.coming-soon')}
                           </Button>
                           
                           {product.status === 'available' && (
@@ -353,7 +354,7 @@ const Products = () => {
                 textAlign: 'center',
               }}
             >
-              Todos los Productos
+              {t('products.all')}
             </Typography>
 
             <Grid container spacing={3}>
@@ -424,7 +425,7 @@ const Products = () => {
                             mt: 'auto',
                           }}
                         >
-                          {product.status === 'available' ? 'Ver Más' : 'Próximamente'}
+                          {product.status === 'available' ? t('actions.viewMore') : t('products.status.coming-soon')}
                         </Button>
                       </CardContent>
                     </Card>

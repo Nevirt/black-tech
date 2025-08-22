@@ -3,7 +3,7 @@
 import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material';
 import { motion } from 'framer-motion';
 import IconRenderer from '@/components/ui/IconRenderer';
-import { COMPANY_CONFIG } from '@/config/company';
+import { useI18n } from '@/i18n/I18nProvider';
 import { useScrollTo } from '@/hooks/useScrollTo';
 
 const cardVariants = {
@@ -24,6 +24,7 @@ const cardVariants = {
 
 const Services = () => {
   const { scrollToSection } = useScrollTo();
+  const { t, company } = useI18n();
   return (
     <Box
       id="services"
@@ -51,7 +52,7 @@ const Services = () => {
                 fontSize: { xs: '2.5rem', md: '3.5rem' },
               }}
             >
-              Nuestros Servicios
+              {t('services.title')}
             </Typography>
 
             <Typography
@@ -65,14 +66,13 @@ const Services = () => {
                 fontWeight: 400,
               }}
             >
-              Ofrecemos una gama completa de servicios tecnológicos para impulsar
-              tu negocio hacia el futuro digital.
+              {t('services.subtitle')}
             </Typography>
           </Box>
         </motion.div>
 
         <Grid container spacing={4}>
-          {COMPANY_CONFIG.services.map((service, index) => (
+          {company.services.map((service, index) => (
             <Grid item xs={12} sm={6} md={4} key={service.title}>
               <motion.div
                 initial="offscreen"
@@ -177,7 +177,7 @@ const Services = () => {
                 fontWeight: 600,
               }}
             >
-              ¿Listo para transformar tu negocio?
+              {t('services.ctaTitle')}
             </Typography>
             
             <Typography
@@ -190,8 +190,7 @@ const Services = () => {
                 mx: 'auto',
               }}
             >
-              Contactanos hoy y descubre cómo nuestras soluciones de IA pueden 
-              llevar tu empresa al siguiente nivel.
+              {t('services.ctaSubtitle')}
             </Typography>
 
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
@@ -211,7 +210,7 @@ const Services = () => {
                 }}
                 onClick={() => scrollToSection('#contact')}
               >
-                Contactar Ahora
+                {t('actions.contactNow')}
               </motion.button>
               
               <motion.button
@@ -230,7 +229,7 @@ const Services = () => {
                 }}
                 onClick={() => scrollToSection('#products')}
               >
-                Ver Productos
+                {t('actions.viewProducts')}
               </motion.button>
             </Box>
           </Box>

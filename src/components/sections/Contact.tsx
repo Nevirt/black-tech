@@ -18,7 +18,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SendIcon from '@mui/icons-material/Send';
-import { COMPANY_CONFIG } from '@/config/company';
+import { useI18n } from '@/i18n/I18nProvider';
 
 interface FormData {
   name: string;
@@ -28,6 +28,7 @@ interface FormData {
 }
 
 const Contact = () => {
+  const { t, company } = useI18n();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -65,20 +66,20 @@ const Contact = () => {
   const contactInfo = [
     {
       icon: <EmailIcon />,
-      title: 'Email',
-      value: COMPANY_CONFIG.contact.email,
-      href: `mailto:${COMPANY_CONFIG.contact.email}`,
+      title: t('contact.email'),
+      value: company.contact.email,
+      href: `mailto:${company.contact.email}`,
     },
     {
       icon: <PhoneIcon />,
-      title: 'Teléfono',
-      value: COMPANY_CONFIG.contact.phone,
-      href: `tel:${COMPANY_CONFIG.contact.phone}`,
+      title: t('contact.phone'),
+      value: company.contact.phone,
+      href: `tel:${company.contact.phone}`,
     },
     {
       icon: <LocationOnIcon />,
-      title: 'Ubicación',
-      value: COMPANY_CONFIG.contact.address,
+      title: t('contact.location'),
+      value: company.contact.address,
       href: '#',
     },
   ];
@@ -112,7 +113,7 @@ const Contact = () => {
                   fontSize: { xs: '2.5rem', md: '3.5rem' },
                 }}
               >
-                Contactanos
+                {t('contact.title')}
               </Typography>
 
               <Typography
@@ -125,8 +126,7 @@ const Contact = () => {
                   fontWeight: 400,
                 }}
               >
-                ¿Listo para revolucionar tu comunicación digital?
-                Ponte en contacto con nosotros y descubre cómo podemos ayudarte.
+                {t('contact.subtitle')}
               </Typography>
 
               {/* Contact Information Cards */}
@@ -221,14 +221,14 @@ const Contact = () => {
                       color: 'text.primary',
                     }}
                   >
-                    ¿Por qué elegirnos?
+                    {t('contact.whyUs')}
                   </Typography>
                   <Typography
                     variant="body1"
                     color="text.secondary"
                     sx={{ lineHeight: 1.6 }}
                   >
-                    En {COMPANY_CONFIG.name}, no solo desarrollamos tecnología, 
+                    En {company.name}, no solo desarrollamos tecnología, 
                     creamos soluciones que transforman negocios. Nuestro enfoque 
                     personalizado y nuestra experiencia en IA nos permiten entregar 
                     resultados que superan las expectativas.
@@ -264,7 +264,7 @@ const Contact = () => {
                     textAlign: 'center',
                   }}
                 >
-                  Envíanos un mensaje
+                  {t('contact.form.title')}
                 </Typography>
 
                 <Box component="form" onSubmit={handleSubmit}>
@@ -272,7 +272,7 @@ const Contact = () => {
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
-                        label="Nombre completo"
+                        label={t('contact.form.name')}
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
@@ -288,7 +288,7 @@ const Contact = () => {
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
-                        label="Email"
+                        label={t('contact.form.email')}
                         name="email"
                         type="email"
                         value={formData.email}
@@ -305,7 +305,7 @@ const Contact = () => {
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
-                        label="Empresa (opcional)"
+                        label={t('contact.form.company')}
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
@@ -320,7 +320,7 @@ const Contact = () => {
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
-                        label="Mensaje"
+                        label={t('contact.form.message')}
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
@@ -350,7 +350,7 @@ const Contact = () => {
                           textTransform: 'none',
                         }}
                       >
-                        Enviar Mensaje
+                        {t('contact.form.submit')}
                       </Button>
                     </Grid>
                   </Grid>
@@ -372,7 +372,7 @@ const Contact = () => {
           severity="success"
           sx={{ width: '100%' }}
         >
-          ¡Mensaje enviado correctamente! Te contactaremos pronto.
+          {t('contact.snackbar.success')}
         </Alert>
       </Snackbar>
     </Box>

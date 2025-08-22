@@ -9,11 +9,12 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { useTheme } from '@mui/material/styles';
 import Image from 'next/image';
-import { COMPANY_CONFIG } from '@/config/company';
+import { useI18n } from '@/i18n/I18nProvider';
 import { useScrollTo } from '@/hooks/useScrollTo';
 
 const Footer = () => {
   const theme = useTheme();
+  const { t, company } = useI18n();
   const currentYear = new Date().getFullYear();
   const { scrollToSection: scrollTo } = useScrollTo();
 
@@ -25,15 +26,15 @@ const Footer = () => {
   };
 
   const footerLinks = [
-    { title: 'Inicio', href: '#home' },
-    { title: 'Nosotros', href: '/about' },
-    { title: 'Servicios', href: '/services' },
-    { title: 'Precios', href: '/pricing' },
-    { title: 'Soporte', href: '/support' },
-    { title: 'Términos y Condiciones', href: '/terms' },
-    { title: 'Política de Privacidad', href: '/privacy' },
-    { title: 'Reembolsos / Cancelación', href: '/refunds' },
-    { title: 'Contacto', href: '#contact' },
+    { title: t('nav.home'), href: '#home' },
+    { title: t('nav.about'), href: '/about' },
+    { title: t('nav.services'), href: '/services' },
+    { title: 'Pricing', href: '/pricing' },
+    { title: 'Support', href: '/support' },
+    { title: t('footer.link.terms'), href: '/terms' },
+    { title: t('footer.link.privacy'), href: '/privacy' },
+    { title: t('footer.link.refunds'), href: '/refunds' },
+    { title: t('nav.contact'), href: '#contact' },
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -80,7 +81,7 @@ const Footer = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Image
                   src="/inzaiq-logo-blanco.png"
-                  alt={`${COMPANY_CONFIG.name} Logo`}
+                  alt={`${company.name} Logo`}
                   width={40}
                   height={40}
                   style={{ marginRight: '12px' }}
@@ -92,7 +93,7 @@ const Footer = () => {
                     fontSize: '1.5rem',
                   }}
                 >
-                  {COMPANY_CONFIG.name}
+                  {company.name}
                 </Typography>
               </Box>
               
@@ -105,7 +106,7 @@ const Footer = () => {
                   fontSize: '1rem',
                 }}
               >
-                {COMPANY_CONFIG.tagline}
+                {company.tagline}
               </Typography>
               
               <Typography 
@@ -116,11 +117,11 @@ const Footer = () => {
                   lineHeight: 1.6,
                 }}
               >
-                InzaiQ LLC registrada en Wyoming, EE. UU. Especialistas en IA y automatización.
+                {t('footer.companyLine')}
               </Typography>
 
               <Box sx={{ display: 'flex', gap: 1 }}>
-                {COMPANY_CONFIG.socialLinks.map((social, index) => (
+                {company.socialLinks.map((social, index) => (
                   <motion.div
                     key={social.name}
                     whileHover={{ scale: 1.1, y: -2 }}
@@ -163,7 +164,7 @@ const Footer = () => {
                   fontSize: '1.2rem',
                 }}
               >
-                Enlaces Rápidos
+                {t('footer.quickLinks')}
               </Typography>
               
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -217,7 +218,7 @@ const Footer = () => {
                   fontSize: '1.2rem',
                 }}
               >
-                Contacto
+                {t('footer.contact')}
               </Typography>
               
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -228,7 +229,7 @@ const Footer = () => {
                     fontSize: '1rem',
                   }}
                 >
-                  <strong>Email:</strong> {COMPANY_CONFIG.contact.email}
+                  <strong>{t('contact.email')}:</strong> {company.contact.email}
                 </Typography>
                 
                 <Typography 
@@ -238,7 +239,7 @@ const Footer = () => {
                     fontSize: '1rem',
                   }}
                 >
-                  <strong>Teléfono:</strong> {COMPANY_CONFIG.contact.phone}
+                  <strong>{t('contact.phone')}:</strong> {company.contact.phone}
                 </Typography>
                 
                 <Typography 
@@ -248,7 +249,7 @@ const Footer = () => {
                     fontSize: '1rem',
                   }}
                 >
-                  <strong>Ubicación:</strong> {COMPANY_CONFIG.contact.address}
+                  <strong>{t('contact.location')}:</strong> {company.contact.address}
                 </Typography>
               </Box>
             </motion.div>
@@ -287,7 +288,7 @@ const Footer = () => {
                 textAlign: { xs: 'center', md: 'left' },
               }}
             >
-              © {currentYear} {COMPANY_CONFIG.name}. Todos los derechos reservados.
+              © {currentYear} {company.name}. {t('footer.copyright')}
             </Typography>
             
             <Typography

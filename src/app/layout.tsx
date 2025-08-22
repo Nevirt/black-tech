@@ -4,7 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
-import { SEO_CONFIG } from '@/config/company';
+import { SEO_CONFIG } from '@/config/company.en';
+import { I18nProvider } from '@/i18n/I18nProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -14,8 +15,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://inzaiq.com'),
-  title: 'InzaiQ – Innovación en Automatización y SaaS para empresas digitales',
-  description: 'InzaiQ ofrece soluciones SaaS de automatización y generación de contenido con IA para optimizar procesos y ventas online.',
+  title: 'InzaiQ – Innovation in Automation and SaaS for digital businesses',
+  description: 'InzaiQ provides AI-powered SaaS for automation and content generation to optimize processes and online sales.',
   keywords: SEO_CONFIG.keywords,
   authors: [{ name: SEO_CONFIG.author }],
   openGraph: {
@@ -28,10 +29,10 @@ export const metadata: Metadata = {
         url: '/inzaiq-logo.png',
         width: 1200,
         height: 630,
-        alt: 'InzaiQ - Donde la innovación toma forma',
+        alt: 'InzaiQ - Where innovation takes shape',
       },
     ],
-    locale: 'es_ES',
+    locale: 'en_US',
     type: 'website',
   },
   twitter: {
@@ -59,12 +60,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="en" className={inter.variable}>
       <body>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
+        <I18nProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {children}
+          </ThemeProvider>
+        </I18nProvider>
       </body>
     </html>
   );

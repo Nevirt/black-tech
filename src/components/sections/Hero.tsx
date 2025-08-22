@@ -5,11 +5,12 @@ import { motion } from 'framer-motion';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ParticlesBackground from '../ParticlesBackground';
-import { COMPANY_CONFIG } from '@/config/company';
+import { useI18n } from '@/i18n/I18nProvider';
 import { useScrollTo } from '@/hooks/useScrollTo';
 
 const Hero = () => {
   const { scrollToSection } = useScrollTo();
+  const { t, company } = useI18n();
 
   const scrollToProducts = () => {
     scrollToSection('#products');
@@ -56,7 +57,7 @@ const Hero = () => {
                     textTransform: 'uppercase',
                   }}
                 >
-                  {COMPANY_CONFIG.tagline}
+                  {company.tagline}
                 </Typography>
               </motion.div>
 
@@ -79,7 +80,7 @@ const Hero = () => {
                     backgroundClip: 'text',
                   }}
                 >
-                  {COMPANY_CONFIG.name}
+                  {company.name}
                 </Typography>
               </motion.div>
 
@@ -100,7 +101,7 @@ const Hero = () => {
                     maxWidth: '560px',
                   }}
                 >
-                  {COMPANY_CONFIG.heroDescription.split('\n\n')[0]}
+                  {company.heroDescription.split('\n\n')[0]}
                 </Typography>
               </motion.div>
 
@@ -120,7 +121,7 @@ const Hero = () => {
                     maxWidth: '600px',
                   }}
                 >
-                  {COMPANY_CONFIG.heroDescription.split('\n\n')[1]}
+                  {company.heroDescription.split('\n\n')[1]}
                 </Typography>
               </motion.div>
 
@@ -152,7 +153,7 @@ const Hero = () => {
                       },
                     }}
                   >
-                    Explorar Productos
+                    {t('actions.exploreProducts')}
                   </Button>
                   
                   <Button
@@ -176,7 +177,7 @@ const Hero = () => {
                       },
                     }}
                   >
-                    Contactanos
+                    {t('actions.contactUs')}
                   </Button>
                 </Box>
               </motion.div>

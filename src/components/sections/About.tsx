@@ -3,7 +3,7 @@
 import { Box, Container, Typography, Card, Grid } from '@mui/material';
 import { motion } from 'framer-motion';
 import IconRenderer from '@/components/ui/IconRenderer';
-import { COMPANY_CONFIG } from '@/config/company';
+import { useI18n } from '@/i18n/I18nProvider';
 
 const cardVariants = {
   offscreen: {
@@ -22,6 +22,7 @@ const cardVariants = {
 };
 
 const About = () => {
+  const { company, t } = useI18n();
   return (
     <Box
       id="about"
@@ -49,7 +50,7 @@ const About = () => {
                 fontSize: { xs: '2.5rem', md: '3.5rem' },
               }}
             >
-              {COMPANY_CONFIG.about.title}
+              {company.about.title}
             </Typography>
 
             <Typography
@@ -63,13 +64,13 @@ const About = () => {
                 fontWeight: 400,
               }}
             >
-              {COMPANY_CONFIG.about.description}
+              {company.about.description}
             </Typography>
           </Box>
         </motion.div>
 
         <Grid container spacing={4}>
-          {COMPANY_CONFIG.about.features.map((feature, index) => (
+          {company.about.features.map((feature, index) => (
             <Grid item xs={12} md={4} key={feature.title}>
               <motion.div
                 initial="offscreen"
@@ -166,7 +167,7 @@ const About = () => {
                 fontWeight: 600,
               }}
             >
-              Nuestra Visión
+              {t('about.visionTitle')}
             </Typography>
             
             <Typography
@@ -179,7 +180,7 @@ const About = () => {
                 mx: 'auto',
               }}
             >
-              {COMPANY_CONFIG.heroDescription.split('\n\n')[2]}
+              {company.heroDescription.split('\n\n')[2]}
             </Typography>
             
             <Box sx={{ mt: 4 }}>
@@ -191,7 +192,7 @@ const About = () => {
                   fontSize: '1.2rem',
                 }}
               >
-                {COMPANY_CONFIG.heroDescription.split('\n\n')[3]}
+                {company.heroDescription.split('\n\n')[3]}
               </Typography>
             </Box>
           </Box>

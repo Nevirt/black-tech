@@ -18,10 +18,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
 import { COMPANY_CONFIG } from '@/config/company';
 import { useScrollTo } from '@/hooks/useScrollTo';
+import { useI18n } from '@/i18n/I18nProvider';
+import TranslateIcon from '@mui/icons-material/Translate';
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { scrollToSection: scrollTo } = useScrollTo();
+  const { locale, setLocale, t, company } = useI18n();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -84,7 +87,7 @@ const Navbar = () => {
                 letterSpacing: '0.5px',
               }}
             >
-              {COMPANY_CONFIG.name}
+              {company.name}
             </Typography>
           </Box>
 
@@ -117,7 +120,7 @@ const Navbar = () => {
                 fontSize: '1.25rem',
               }}
             >
-              {COMPANY_CONFIG.name}
+              {company.name}
             </Typography>
           </Box>
 
@@ -155,7 +158,7 @@ const Navbar = () => {
                 },
               }}
             >
-              {COMPANY_CONFIG.navigation.map((page) => (
+              {company.navigation.map((page) => (
                 <MenuItem 
                   key={page.title} 
                   onClick={() => scrollToSection(page.href)}
@@ -175,7 +178,7 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
-            {COMPANY_CONFIG.navigation.map((page) => (
+            {company.navigation.map((page) => (
               <Button
                 key={page.title}
                 component={motion.button}
@@ -201,6 +204,26 @@ const Navbar = () => {
                 {page.title}
               </Button>
             ))}
+            <Button
+              component={motion.button}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setLocale(locale === 'en' ? 'es' : 'en')}
+              startIcon={<TranslateIcon />}
+              sx={{
+                my: 2,
+                mx: 1,
+                px: 2,
+                py: 1,
+                color: trigger ? 'text.primary' : 'white',
+                fontWeight: 500,
+                borderRadius: 2,
+                border: trigger ? '1px solid rgba(0,0,0,0.12)' : '1px solid rgba(255,255,255,0.4)',
+                textTransform: 'none',
+              }}
+            >
+              {locale === 'en' ? t('lang.es') : t('lang.en')}
+            </Button>
           </Box>
         </Toolbar>
       </Container>
