@@ -2,14 +2,16 @@
 
 import Layout from '@/components/layout/Layout';
 import { Box, Container, Typography, List, ListItem } from '@mui/material';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export default function TermsPage() {
+  const { t } = useI18n();
   return (
     <Layout>
       <Box component="section" sx={{ py: { xs: 10, md: 14 } }}>
         <Container maxWidth="md">
           <Typography variant="h2" sx={{ mb: 1.5, fontWeight: 700 }}>
-            Términos y Condiciones de InzaiQ
+            {t('terms.title')}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
             Última actualización: Agosto 2025

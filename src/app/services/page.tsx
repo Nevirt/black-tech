@@ -3,9 +3,11 @@
 import Layout from '@/components/layout/Layout';
 import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material';
 import { COMPANY_CONFIG, PRODUCTS_CONFIG } from '@/config/company';
+import { useI18n } from '@/i18n/I18nProvider';
 import IconRenderer from '@/components/ui/IconRenderer';
 
 export default function ServicesPage() {
+  const { t } = useI18n();
   return (
     <Layout>
       <Box component="section" sx={{ py: { xs: 10, md: 14 } }}>
@@ -34,10 +36,10 @@ export default function ServicesPage() {
           </Grid>
 
           <Typography variant="h4" sx={{ mb: 2, fontWeight: 700 }}>
-            Productos SaaS
+            {t('services.products.title')}
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-            Conoce nuestras soluciones disponibles y próximos lanzamientos.
+            {t('services.products.subtitle')}
           </Typography>
           <Grid container spacing={3}>
             {PRODUCTS_CONFIG.map((product) => (

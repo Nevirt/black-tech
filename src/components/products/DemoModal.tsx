@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
+import { useI18n } from '@/i18n/I18nProvider';
 
 // 🔧 CONFIGURACIÓN DE SEGURIDAD
 // ⚠️ CAMBIA ESTA BANDERA PARA ACTIVAR/DESACTIVAR LÍMITES EN EL FRONTEND
@@ -69,6 +70,7 @@ interface DemoModalProps {
 }
 
 const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
+  const { t } = useI18n();
   const [activeStep, setActiveStep] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [demoConfig, setDemoConfig] = useState<DemoConfig>({
@@ -95,7 +97,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
     requestReset,
   } = useSessionManager();
 
-  const steps = ['Configurar Empresa', 'Agregar Productos', 'Demo del Chat'];
+  const steps = [t('demo.steps.configureCompany'), t('demo.steps.addProducts'), t('demo.steps.chatDemo')];
 
   // Inicializar chat con sesión
   const initializeChat = async () => {
@@ -322,7 +324,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
             lineHeight: 1.2
           }}
         >
-          Demo Interactivo - Bot de WhatsApp
+          {t('demo.dialog.title')}
         </Typography>
         <IconButton 
           onClick={handleClose}
@@ -380,7 +382,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                         <BusinessIcon sx={{ mr: 2, color: 'primary.main' }} />
                         <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
-                          Configuracion de tu Empresa
+                          {t('demo.companyConfig.title')}
                         </Typography>
                       </Box>
 
@@ -388,20 +390,20 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                         <Grid item xs={12}>
                           <TextField
                             fullWidth
-                            label="Nombre de la Empresa"
+                            label={t('demo.companyConfig.companyName')}
                             value={demoConfig.companyName}
                             onChange={(e) => setDemoConfig(prev => ({ ...prev, companyName: e.target.value }))}
-                            placeholder="Ej: TechStore Pro"
+                            placeholder={t('demo.companyConfig.companyName.placeholder')}
                             required
                           />
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
                             fullWidth
-                            label="Sector/Industria"
+                            label={t('demo.companyConfig.industry')}
                             value={demoConfig.industry}
                             onChange={(e) => setDemoConfig(prev => ({ ...prev, industry: e.target.value }))}
-                            placeholder="Ej: Tecnologia, Restaurante, Moda, etc."
+                            placeholder={t('demo.companyConfig.industry.placeholder')}
                             required
                           />
                         </Grid>
@@ -409,8 +411,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
 
                       <Box sx={{ mt: 3, p: 3, bgcolor: 'grey.50', borderRadius: 2 }}>
                         <Typography variant="body2" color="text.secondary">
-                          💡 Esta informacion se usara para personalizar las respuestas del bot y crear 
-                          una experiencia mas realista en el demo.
+                          {t('demo.companyConfig.hint')}
                         </Typography>
                       </Box>
                     </CardContent>
@@ -432,21 +433,21 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                         <InventoryIcon sx={{ mr: 2, color: 'primary.main' }} />
                         <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
-                          Catalogo de Productos
+                          {t('demo.catalog.title')}
                         </Typography>
                       </Box>
 
                       {/* Add Product Form */}
                       <Box sx={{ mb: 4, p: { xs: 2, sm: 3 }, bgcolor: 'grey.50', borderRadius: 2 }}>
                         <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
-                          Agregar Producto
+                          {t('demo.catalog.addProduct')}
                         </Typography>
                         <Grid container spacing={2}>
                           <Grid item xs={12} sm={4}>
                             <TextField
                               fullWidth
                               size="small"
-                              label="Nombre del Producto"
+                              label={t('demo.product.name')}
                               value={newProduct.name}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, name: e.target.value }))}
                             />
@@ -455,7 +456,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                             <TextField
                               fullWidth
                               size="small"
-                              label="Precio"
+                              label={t('demo.product.price')}
                               type="number"
                               value={newProduct.price}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, price: e.target.value }))}
@@ -468,7 +469,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                             <TextField
                               fullWidth
                               size="small"
-                              label="Descripcion Breve"
+                              label={t('demo.product.description')}
                               value={newProduct.description}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, description: e.target.value }))}
                             />
@@ -491,7 +492,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                       {demoConfig.products.length > 0 && (
                         <Box>
                           <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
-                            Productos Agregados ({demoConfig.products.length})
+                            {t('demo.products.added')} ({demoConfig.products.length})
                           </Typography>
                           <List>
                             {demoConfig.products.map((product) => (
@@ -527,7 +528,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                       {demoConfig.products.length === 0 && (
                         <Box sx={{ textAlign: 'center', py: 4 }}>
                           <Typography variant="body2" color="text.secondary">
-                            Agrega algunos productos para hacer la demo mas realista
+                            {t('demo.empty.addProductsHint')}
                           </Typography>
                         </Box>
                       )}
@@ -902,8 +903,8 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                         }}
                       >
                         {(SECURITY_ENABLED && isLimitReached)
-                          ? '⚠️ Límite de mensajes alcanzado. Reinicia el demo para continuar.'
-                          : '💡 Prueba escribir: "hola", "productos", "precios", "horarios", "hacer pedido"'
+                          ? t('demo.limit.caption')
+                          : t('demo.examplesHint')
                         }
                       </Typography>
                     </Box>
@@ -931,7 +932,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                 fontSize: { xs: '0.8rem', sm: '0.875rem' }
               }}
             >
-              Anterior
+              {t('actions.previous')}
             </Button>
             
             {activeStep < steps.length - 1 ? (
@@ -947,7 +948,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                   fontSize: { xs: '0.8rem', sm: '0.875rem' }
                 }}
               >
-                Siguiente
+                {t('actions.next')}
               </Button>
             ) : (
               <Button
@@ -960,7 +961,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ open, onClose }) => {
                   fontSize: { xs: '0.8rem', sm: '0.875rem' }
                 }}
               >
-                Reiniciar Demo
+                {t('actions.restartDemo')}
               </Button>
             )}
           </Box>

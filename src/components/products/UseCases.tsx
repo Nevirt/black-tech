@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { useI18n } from '@/i18n/I18nProvider';
 import {
   Box,
   Container,
@@ -142,6 +143,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
     }
   };
 
+  const { t } = useI18n();
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: 4 }}>
       <Container maxWidth="lg">
@@ -161,7 +163,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
                 '&:hover': { bgcolor: 'action.hover' }
               }}
             >
-              Volver a Productos
+              {t('usecases.back')}
             </Button>
 
             <Typography
@@ -174,7 +176,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
                 textAlign: 'center'
               }}
             >
-              Casos de Uso Reales
+              {t('usecases.title')}
             </Typography>
 
             <Typography
@@ -188,8 +190,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
                 textAlign: 'center'
               }}
             >
-              Descubre como empresas reales estan transformando sus negocios con nuestro Bot de WhatsApp. 
-              Resultados comprobados que puedes lograr tu tambien.
+              {t('usecases.subtitle')}
             </Typography>
 
             {/* Stats Section */}
@@ -206,7 +207,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <WhatsAppIcon sx={{ fontSize: 40, color: '#25D366' }} />
                 <Typography variant="h4" fontWeight={600}>
-                  Resultados Comprobados
+                  {t('usecases.stats.title')}
                 </Typography>
               </Box>
               
@@ -219,7 +220,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
                         {stat.value}
                       </Typography>
                       <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                        {stat.label}
+                        {t(stat.label)}
                       </Typography>
                     </Box>
                   </Grid>
@@ -306,7 +307,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
 
                       {/* Benefits */}
                       <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
-                        Beneficios Clave:
+                        {t('usecases.benefits')}
                       </Typography>
                       <List dense sx={{ p: 0 }}>
                         {useCase.benefits.map((benefit, idx) => (
@@ -357,11 +358,10 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
             }}
           >
             <Typography variant="h3" fontWeight={700} sx={{ mb: 2 }}>
-              Tu Negocio Puede Ser el Siguiente
+              {t('usecases.cta.title')}
             </Typography>
             <Typography variant="h6" color="text.secondary" sx={{ mb: 4, maxWidth: '600px', mx: 'auto' }}>
-              No importa el tamaño de tu empresa. Nuestro bot se adapta a cualquier industria y 
-              comienza a generar resultados desde el primer dia.
+              {t('usecases.cta.subtitle')}
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Button
@@ -376,7 +376,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
                   borderRadius: 2
                 }}
               >
-                Ver Demo Interactivo
+                {t('usecases.cta.viewDemo')}
               </Button>
               <Button
                 variant="outlined"
@@ -390,7 +390,7 @@ const UseCases: React.FC<UseCasesProps> = ({ onBack, onOpenDemo }) => {
                   borderRadius: 2
                 }}
               >
-                Ver Productos
+                {t('usecases.cta.viewProducts')}
               </Button>
             </Box>
           </Paper>

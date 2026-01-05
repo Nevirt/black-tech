@@ -29,8 +29,8 @@ const Footer = () => {
     { title: t('nav.home'), href: '#home' },
     { title: t('nav.about'), href: '/about' },
     { title: t('nav.services'), href: '/services' },
-    { title: 'Pricing', href: '/pricing' },
-    { title: 'Support', href: '/support' },
+    // Pricing hidden intentionally until available
+    { title: t('footer.link.support'), href: '/support' },
     { title: t('footer.link.terms'), href: '/terms' },
     { title: t('footer.link.privacy'), href: '/privacy' },
     { title: t('footer.link.refunds'), href: '/refunds' },

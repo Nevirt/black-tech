@@ -2,29 +2,31 @@
 
 import Layout from '@/components/layout/Layout';
 import { Box, Container, Typography } from '@mui/material';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export default function RefundsPage() {
+  const { t } = useI18n();
   return (
     <Layout>
       <Box component="section" sx={{ py: { xs: 10, md: 14 } }}>
         <Container maxWidth="md">
           <Typography variant="h2" sx={{ mb: 2, fontWeight: 700 }}>
-            Política de Reembolsos y Cancelación
+            {t('refunds.title')}
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 2 }}>
-            Detallamos las condiciones para cancelaciones y reembolsos. Buscamos transparencia y una buena experiencia para todos los clientes.
+            {t('refunds.subtitle')}
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 1 }}>
-            - Cancelación de suscripciones.
+            - {t('refunds.point.cancellation')}
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 1 }}>
-            - Casos elegibles para reembolso.
+            - {t('refunds.point.eligible')}
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 1 }}>
-            - Procesos y tiempos de gestión.
+            - {t('refunds.point.process')}
           </Typography>
           <Typography color="text.secondary">
-            Para soporte relacionado con pagos, ponte en contacto con nuestro equipo.
+            {t('refunds.contact')}
           </Typography>
         </Container>
       </Box>

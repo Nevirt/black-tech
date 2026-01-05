@@ -146,7 +146,7 @@ const Products = () => {
                 fontWeight: 400,
               }}
             >
-              Soluciones innovadoras diseñadas para transformar tu negocio con el poder de la inteligencia artificial.
+              {t('products.subtitle')}
             </Typography>
           </Box>
         </motion.div>
