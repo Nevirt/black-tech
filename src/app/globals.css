@@ -1,84 +1,66 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-bg: rgba(20, 20, 20, 0.6);
+  --glass-highlight: rgba(255, 255, 255, 0.1);
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* Compensar altura del navbar */
+  scroll-padding-top: 80px;
 }
 
 body {
-  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scrolling for sections */
-section {
-  scroll-margin-top: 80px; /* Height of the navbar */
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Animaciones de transición para secciones */
-section:target {
-  animation: highlight-section 0.8s ease-out;
-}
-
-@keyframes highlight-section {
-  0% {
-    transform: scale(1);
-    opacity: 0.95;
-  }
-  50% {
-    transform: scale(1.005);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Mejoras para el scroll en móvil */
-@media (max-width: 768px) {
-  html {
-    scroll-padding-top: 70px;
-  }
-  
-  section {
-    scroll-margin-top: 70px;
-  }
-}
-
-/* Animación suave para botones de navegación */
-.nav-button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.nav-button:hover {
-  transform: translateY(-2px);
-}
-
-.nav-button:active {
-  transform: translateY(0px) scale(0.98);
-}
-
-/* Custom scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f5f5f5;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #000000;
-  border-radius: 5px;
+  background: #333;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #333333;
+  background: #666;
+}
+
+/* Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s ease;
+}
+
+.glass-panel-hover:hover {
+  background: rgba(40, 40, 40, 0.8);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #fff 0%, #888 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

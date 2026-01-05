@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import { SEO_CONFIG } from '@/config/company.en';
 import { I18nProvider } from '@/i18n/I18nProvider';
+import NeuralBackground from '@/components/background/NeuralBackground';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -61,13 +63,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body>
-        <I18nProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {children}
-          </ThemeProvider>
-        </I18nProvider>
+      <body className="antialiased text-white bg-black">
+        <AppRouterCacheProvider>
+          <I18nProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <NeuralBackground />
+              <div className="relative z-10 selection:bg-cyan-500 selection:text-black">
+                {children}
+              </div>
+            </ThemeProvider>
+          </I18nProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

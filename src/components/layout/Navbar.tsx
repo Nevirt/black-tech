@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -27,7 +27,7 @@ const Navbar = () => {
   const { locale, setLocale, t, company } = useI18n();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 0,
+    threshold: 20,
   });
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -44,15 +44,15 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar 
-      position="fixed" 
+    <AppBar
+      position="fixed"
       color="transparent"
+      elevation={0}
       sx={{
-        background: trigger ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
-        boxShadow: trigger ? '0px 2px 20px rgba(0, 0, 0, 0.1)' : 'none',
+        background: trigger ? 'rgba(0, 0, 0, 0.8)' : 'transparent',
         backdropFilter: trigger ? 'blur(20px)' : 'none',
+        borderBottom: trigger ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
         transition: 'all 0.3s ease-in-out',
-        borderBottom: trigger ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
       }}
     >
       <Container maxWidth="xl">
@@ -60,7 +60,7 @@ const Navbar = () => {
           {/* Logo - Desktop */}
           <Box
             component={motion.div}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.02 }}
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -70,8 +70,8 @@ const Navbar = () => {
             onClick={() => scrollToSection('#home')}
           >
             <Image
-              src={trigger ? "/inzaiq-logo.png" : "/inzaiq-logo-blanco.png"}
-              alt={`${COMPANY_CONFIG.name} Logo`}
+              src="/inzaiq-logo-blanco.png"
+              alt={`${company.name} Logo`}
               width={40}
               height={40}
               style={{ marginRight: '12px' }}
@@ -80,11 +80,12 @@ const Navbar = () => {
               variant="h6"
               noWrap
               sx={{
-                fontWeight: 700,
-                color: trigger ? 'primary.main' : 'white',
+                fontWeight: 800,
+                color: 'white',
                 textDecoration: 'none',
                 fontSize: '1.5rem',
-                letterSpacing: '0.5px',
+                letterSpacing: '-0.5px',
+                fontFamily: 'var(--font-inter)',
               }}
             >
               {company.name}
@@ -104,8 +105,8 @@ const Navbar = () => {
             onClick={() => scrollToSection('#home')}
           >
             <Image
-              src={trigger ? "/inzaiq-logo.png" : "/inzaiq-logo-blanco.png"}
-              alt={`${COMPANY_CONFIG.name} Logo`}
+              src="/inzaiq-logo-blanco.png"
+              alt={`${company.name} Logo`}
               width={32}
               height={32}
               style={{ marginRight: '8px' }}
@@ -114,10 +115,11 @@ const Navbar = () => {
               variant="h6"
               noWrap
               sx={{
-                fontWeight: 700,
-                color: trigger ? 'primary.main' : 'white',
+                fontWeight: 800,
+                color: 'white',
                 textDecoration: 'none',
                 fontSize: '1.25rem',
+                letterSpacing: '-0.5px',
               }}
             >
               {company.name}
@@ -131,7 +133,7 @@ const Navbar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              sx={{ color: trigger ? 'primary.main' : 'white' }}
+              sx={{ color: 'white' }}
             >
               <MenuIcon />
             </IconButton>
@@ -152,19 +154,20 @@ const Navbar = () => {
               sx={{
                 display: { xs: 'block', md: 'none' },
                 '& .MuiPaper-root': {
-                  borderRadius: 2,
-                  mt: 1,
-                  boxShadow: '0px 8px 32px rgba(0, 0, 0, 0.12)',
+                  bgcolor: 'black',
+                  color: 'white',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 0,
                 },
               }}
             >
               {company.navigation.map((page) => (
-                <MenuItem 
-                  key={page.title} 
+                <MenuItem
+                  key={page.title}
                   onClick={() => scrollToSection(page.href)}
                   sx={{
                     '&:hover': {
-                      bgcolor: 'grey.50',
+                      bgcolor: 'rgba(255, 255, 255, 0.1)',
                     },
                   }}
                 >
@@ -185,19 +188,17 @@ const Navbar = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => scrollToSection(page.href)}
-                sx={{ 
-                  my: 2, 
+                sx={{
+                  my: 2,
                   mx: 1,
                   px: 2,
                   py: 1,
-                  color: trigger ? 'text.primary' : 'white',
+                  color: 'white',
                   display: 'block',
                   fontWeight: 500,
-                  borderRadius: 2,
-                  transition: 'all 0.3s ease-in-out',
+                  transition: 'all 0.2s',
                   '&:hover': {
-                    color: 'primary.main',
-                    bgcolor: trigger ? 'grey.50' : 'rgba(255, 255, 255, 0.1)',
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
                   },
                 }}
               >
@@ -215,11 +216,15 @@ const Navbar = () => {
                 mx: 1,
                 px: 2,
                 py: 1,
-                color: trigger ? 'text.primary' : 'white',
+                color: 'white',
                 fontWeight: 500,
-                borderRadius: 2,
-                border: trigger ? '1px solid rgba(0,0,0,0.12)' : '1px solid rgba(255,255,255,0.4)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: 0,
                 textTransform: 'none',
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255,255,255,0.5)',
+                },
               }}
             >
               {locale === 'en' ? t('lang.es') : t('lang.en')}
@@ -231,4 +236,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

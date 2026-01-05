@@ -1,205 +1,80 @@
 'use client';
 
-import { Box, Container, Typography, Card, Grid } from '@mui/material';
+import { Container } from '@mui/material';
 import { motion } from 'framer-motion';
 import IconRenderer from '@/components/ui/IconRenderer';
 import { useI18n } from '@/i18n/I18nProvider';
-
-const cardVariants = {
-  offscreen: {
-    y: 50,
-    opacity: 0,
-  },
-  onscreen: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: 'spring',
-      bounce: 0.4,
-      duration: 0.8,
-    },
-  },
-};
+import GlassCard from '@/components/ui/GlassCard';
 
 const About = () => {
   const { company, t } = useI18n();
   return (
-    <Box
-      id="about"
-      component="section"
-      sx={{
-        py: { xs: 10, md: 15 },
-        bgcolor: 'background.default',
-        position: 'relative',
-      }}
-    >
+    <section id="about" className="relative z-10 py-24 md:py-32 bg-black text-white">
       <Container maxWidth="lg">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 12 } }}>
-            <Typography
-              variant="h2"
-              sx={{
-                mb: 4,
-                color: 'text.primary',
-                fontWeight: 700,
-                fontSize: { xs: '2.5rem', md: '3.5rem' },
-              }}
-            >
+          <div className="text-center mb-20 md:mb-24">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
               {company.about.title}
-            </Typography>
+            </h2>
 
-            <Typography
-              variant="h5"
-              color="text.secondary"
-              sx={{
-                maxWidth: '800px',
-                mx: 'auto',
-                lineHeight: 1.6,
-                fontSize: { xs: '1.1rem', md: '1.3rem' },
-                fontWeight: 400,
-              }}
-            >
+            <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto font-light leading-relaxed">
               {company.about.description}
-            </Typography>
-          </Box>
+            </p>
+          </div>
         </motion.div>
 
-        <Grid container spacing={4}>
+        {/* Features Grid - CSS Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {company.about.features.map((feature, index) => (
-            <Grid item xs={12} md={4} key={feature.title}>
-              <motion.div
-                initial="offscreen"
-                whileInView="onscreen"
-                viewport={{ once: true, amount: 0.3 }}
-                variants={cardVariants}
-                transition={{ delay: index * 0.2 }}
-              >
-                <Card
-                  sx={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    p: 4,
-                    borderRadius: 3,
-                    border: '1px solid',
-                    borderColor: 'grey.200',
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
-                      boxShadow: '0px 16px 48px rgba(0, 0, 0, 0.12)',
-                      borderColor: 'primary.main',
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '50%',
-                      bgcolor: 'primary.main',
-                      color: 'white',
-                      mb: 3,
-                      transition: 'all 0.3s ease-in-out',
-                    }}
-                  >
-                    <IconRenderer iconName={feature.icon} fontSize="large" />
-                  </Box>
-                  
-                  <Typography
-                    variant="h6"
-                    component="h3"
-                    gutterBottom
-                    sx={{ 
-                      fontWeight: 600,
-                      mb: 2,
-                      color: 'text.primary',
-                    }}
-                  >
-                    {feature.title}
-                  </Typography>
-                  
-                  <Typography 
-                    color="text.secondary"
-                    sx={{
-                      lineHeight: 1.6,
-                      fontSize: '1rem',
-                    }}
-                  >
-                    {feature.description}
-                  </Typography>
-                </Card>
-              </motion.div>
-            </Grid>
-          ))}
-        </Grid>
+            <div key={feature.title} className="flex h-full">
+              <GlassCard className="w-full h-full text-center items-center !bg-white/5 !border-white/10 p-10" delay={index * 0.2}>
+                <div className="w-16 h-16 rounded-full bg-transparent flex items-center justify-center mb-6 text-white border border-white/20">
+                  <IconRenderer iconName={feature.icon} fontSize="large" />
+                </div>
 
-        {/* Additional content section */}
+                <h3 className="text-2xl font-bold mb-4 text-white">
+                  {feature.title}
+                </h3>
+
+                <p className="text-gray-400 leading-relaxed text-base">
+                  {feature.description}
+                </p>
+              </GlassCard>
+            </div>
+          ))}
+        </div>
+
+        {/* Vision Section */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-32"
         >
-          <Box
-            sx={{
-              mt: { xs: 8, md: 12 },
-              p: { xs: 4, md: 6 },
-              bgcolor: 'grey.50',
-              borderRadius: 4,
-              textAlign: 'center',
-            }}
-          >
-            <Typography
-              variant="h4"
-              sx={{
-                mb: 3,
-                color: 'text.primary',
-                fontWeight: 600,
-              }}
-            >
+          <div className="glass-panel p-12 md:p-20 rounded-2xl text-center border-t border-white/10 bg-white/5">
+            <h4 className="text-3xl md:text-4xl font-bold mb-8 text-white">
               {t('about.visionTitle')}
-            </Typography>
-            
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{
-                fontSize: '1.1rem',
-                lineHeight: 1.7,
-                maxWidth: '700px',
-                mx: 'auto',
-              }}
-            >
+            </h4>
+
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-10 font-light">
               {company.heroDescription.split('\n\n')[2]}
-            </Typography>
-            
-            <Box sx={{ mt: 4 }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  color: 'primary.main',
-                  fontWeight: 600,
-                  fontSize: '1.2rem',
-                }}
-              >
-                {company.heroDescription.split('\n\n')[3]}
-              </Typography>
-            </Box>
-          </Box>
+            </p>
+
+            <p className="text-2xl font-medium text-white tracking-wide border-b border-white inline-block pb-1">
+              {company.heroDescription.split('\n\n')[3]}
+            </p>
+          </div>
         </motion.div>
       </Container>
-    </Box>
+    </section>
   );
 };
 
-export default About; 
+export default About;

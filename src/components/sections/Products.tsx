@@ -1,445 +1,185 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Grid, 
-  Card, 
-  CardContent, 
-  Button, 
-  Chip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-} from '@mui/material';
+import { Container } from '@mui/material';
 import { motion } from 'framer-motion';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import LaunchIcon from '@mui/icons-material/Launch';
 import IconRenderer from '../ui/IconRenderer';
 import { useI18n } from '@/i18n/I18nProvider';
 import UseCases from '../products/UseCases';
 import DemoModal from '../products/DemoModal';
+import GlassCard from '../ui/GlassCard';
+import MinimalButton from '../ui/NeonButton';
+import { ArrowRight, ExternalLink } from 'lucide-react';
+import clsx from 'clsx';
 
 type ViewMode = 'products' | 'use-cases';
-
-const cardVariants = {
-  offscreen: {
-    y: 50,
-    opacity: 0,
-  },
-  onscreen: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: 'spring',
-      bounce: 0.4,
-      duration: 0.8,
-    },
-  },
-};
 
 const Products = () => {
   const { t, products } = useI18n();
   const [viewMode, setViewMode] = useState<ViewMode>('products');
   const [demoModalOpen, setDemoModalOpen] = useState(false);
-  
+
   const featuredProducts = products.filter(product => product.featured);
   const allProducts = products;
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'available':
-        return 'success';
-      case 'beta':
-        return 'warning';
-      case 'coming-soon':
-        return 'info';
-      default:
-        return 'default';
+      case 'available': return 'bg-white text-black border-white';
+      case 'beta': return 'bg-transparent text-gray-300 border-gray-500';
+      case 'coming-soon': return 'bg-transparent text-gray-500 border-gray-700 dashed border';
+      default: return 'text-gray-500';
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'available':
-        return t('products.status.available');
-      case 'beta':
-        return t('products.status.beta');
-      case 'coming-soon':
-        return t('products.status.coming-soon');
-      default:
-        return t('products.status.unknown');
+      case 'available': return t('products.status.available');
+      case 'beta': return t('products.status.beta');
+      case 'coming-soon': return t('products.status.coming-soon');
+      default: return t('products.status.unknown');
     }
   };
 
-  const handleShowUseCases = () => {
-    setViewMode('use-cases');
-  };
-
-  const handleBackToProducts = () => {
-    setViewMode('products');
-  };
-
-  const handleOpenDemo = () => {
-    setDemoModalOpen(true);
-  };
-
-  const handleCloseDemo = () => {
-    setDemoModalOpen(false);
-  };
+  const handleShowUseCases = () => setViewMode('use-cases');
+  const handleBackToProducts = () => setViewMode('products');
+  const handleOpenDemo = () => setDemoModalOpen(true);
+  const handleCloseDemo = () => setDemoModalOpen(false);
 
   return (
     <>
-      {/* Demo Modal - Available in all views */}
       <DemoModal open={demoModalOpen} onClose={handleCloseDemo} />
-      
-      {/* Use Cases View */}
-      {viewMode === 'use-cases' && (
+
+      {viewMode === 'use-cases' ? (
         <UseCases onBack={handleBackToProducts} onOpenDemo={handleOpenDemo} />
-      )}
-      
-      {/* Products View */}
-      {viewMode === 'products' && (
-    <Box
-      id="products"
-      component="section"
-      sx={{
-        py: { xs: 10, md: 15 },
-        bgcolor: 'background.paper',
-        position: 'relative',
-      }}
-    >
-      <Container maxWidth="lg">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 12 } }}>
-            <Typography
-              variant="h2"
-              sx={{
-                mb: 4,
-                color: 'text.primary',
-                fontWeight: 700,
-                fontSize: { xs: '2.5rem', md: '3.5rem' },
-              }}
+      ) : (
+        <section id="products" className="relative z-10 py-24 md:py-32 bg-black text-white">
+          <Container maxWidth="lg">
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-20 md:mb-24"
             >
-              {t('products.title')}
-            </Typography>
+              <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+                {t('products.title')}
+              </h2>
+              <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed">
+                {t('products.subtitle')}
+              </p>
+            </motion.div>
 
-            <Typography
-              variant="h5"
-              color="text.secondary"
-              sx={{
-                maxWidth: '800px',
-                mx: 'auto',
-                lineHeight: 1.6,
-                fontSize: { xs: '1.1rem', md: '1.3rem' },
-                fontWeight: 400,
-              }}
-            >
-              {t('products.subtitle')}
-            </Typography>
-          </Box>
-        </motion.div>
+            {/* Featured Products */}
+            {featuredProducts.length > 0 && (
+              <div className="mb-24">
+                <h3 className="text-2xl font-bold text-white mb-10 border-l-4 border-white pl-6 uppercase tracking-wider">
+                  {t('products.featured')}
+                </h3>
 
-        {/* Featured Products */}
-        {featuredProducts.length > 0 && (
-          <Box sx={{ mb: { xs: 8, md: 12 } }}>
-            <Typography
-              variant="h4"
-              sx={{
-                mb: 6,
-                color: 'text.primary',
-                fontWeight: 600,
-                textAlign: 'center',
-              }}
-            >
-              {t('products.featured')}
-            </Typography>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                  {featuredProducts.map((product, index) => (
+                    <div key={product.id} className="flex h-full">
+                      <GlassCard className="w-full h-full flex flex-col border border-white/20 hover:border-white/60 transition-colors !bg-white/5 p-10" delay={index * 0.2}>
 
-            <Grid container spacing={4}>
-              {featuredProducts.map((product, index) => (
-                <Grid item xs={12} lg={6} key={product.id}>
-                  <motion.div
-                    initial="offscreen"
-                    whileInView="onscreen"
-                    viewport={{ once: true, amount: 0.3 }}
-                    variants={cardVariants}
-                    transition={{ delay: index * 0.2 }}
-                  >
-                    <Card
-                      sx={{
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        borderRadius: 3,
-                        border: '2px solid',
-                        borderColor: 'primary.main',
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          transform: 'translateY(-8px)',
-                          boxShadow: '0px 20px 60px rgba(0, 0, 0, 0.15)',
-                        },
-                      }}
-                    >
-                      <CardContent sx={{ p: 4, flexGrow: 1 }}>
-                        {/* Product Header */}
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-                          <Box>
-                            <Typography
-                              variant="h5"
-                              component="h3"
-                              sx={{
-                                fontWeight: 600,
-                                mb: 1,
-                                color: 'text.primary',
-                              }}
-                            >
-                              {product.name}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              sx={{ mb: 2 }}
-                            >
-                              {product.category}
-                            </Typography>
-                          </Box>
-                          <Chip
-                            label={getStatusText(product.status)}
-                            color={getStatusColor(product.status) as any}
-                            size="small"
-                            sx={{ fontWeight: 500 }}
-                          />
-                        </Box>
+                        <div className="flex justify-between items-start mb-8">
+                          <div>
+                            <h3 className="text-3xl font-bold text-white mb-2">{product.name}</h3>
+                            <span className="text-gray-400 text-sm font-mono uppercase tracking-wider">{product.category}</span>
+                          </div>
+                          <div className={clsx("px-4 py-1.5 rounded text-xs font-bold border self-start", getStatusStyle(product.status))}>
+                            {getStatusText(product.status)}
+                          </div>
+                        </div>
 
-                        {/* Description */}
-                        <Typography
-                          variant="body1"
-                          color="text.secondary"
-                          sx={{
-                            mb: 4,
-                            lineHeight: 1.6,
-                          }}
-                        >
+                        <p className="text-gray-300 mb-10 leading-relaxed text-lg font-light">
                           {product.description}
-                        </Typography>
+                        </p>
 
-                        {/* Features */}
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            mb: 2,
-                            fontWeight: 600,
-                            color: 'text.primary',
-                          }}
-                        >
-                          {t('products.mainFeatures')}
-                        </Typography>
+                        <div className="mb-8 mt-auto">
+                          <div className="space-y-4">
+                            {product.features.slice(0, 3).map((feature, idx) => (
+                              <div key={idx} className="flex gap-4 p-4 rounded bg-white/5">
+                                <div className="mt-1 text-white">
+                                  <IconRenderer iconName={feature.icon} fontSize="small" />
+                                </div>
+                                <div>
+                                  <p className="text-white font-bold text-sm">{feature.title}</p>
+                                  <p className="text-xs text-gray-400">{feature.description}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
 
-                        <List sx={{ mb: 4 }}>
-                          {product.features.slice(0, 3).map((feature, featureIndex) => (
-                            <ListItem key={featureIndex} sx={{ px: 0, py: 0.5 }}>
-                              <ListItemIcon sx={{ minWidth: 36 }}>
-                                <IconRenderer iconName={feature.icon} fontSize="small" color="#000000" />
-                              </ListItemIcon>
-                              <ListItemText
-                                primary={feature.title}
-                                secondary={feature.description}
-                                primaryTypographyProps={{
-                                  fontWeight: 500,
-                                  fontSize: '0.9rem',
-                                }}
-                                secondaryTypographyProps={{
-                                  fontSize: '0.8rem',
-                                }}
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-
-                        {/* Benefits */}
-                        {product.benefits && (
-                          <>
-                            <Typography
-                              variant="h6"
-                              sx={{
-                                mb: 2,
-                                fontWeight: 600,
-                                color: 'text.primary',
-                              }}
-                            >
-                              {t('products.benefits')}
-                            </Typography>
-                            <List sx={{ mb: 4 }}>
-                              {product.benefits.slice(0, 3).map((benefit, benefitIndex) => (
-                                <ListItem key={benefitIndex} sx={{ px: 0, py: 0.5 }}>
-                                  <ListItemIcon sx={{ minWidth: 36 }}>
-                                    <CheckCircleOutlineIcon sx={{ fontSize: 20, color: 'primary.main' }} />
-                                  </ListItemIcon>
-                                  <ListItemText
-                                    primary={benefit}
-                                    primaryTypographyProps={{
-                                      fontSize: '0.9rem',
-                                    }}
-                                  />
-                                </ListItem>
-                              ))}
-                            </List>
-                          </>
-                        )}
-
-                        {/* Action Buttons */}
-                        <Box sx={{ display: 'flex', gap: 2, mt: 'auto' }}>
-                          <Button
-                            variant="contained"
-                            endIcon={<ArrowForwardIcon />}
+                        <div className="pt-6 flex gap-4 mt-4 border-t border-white/10">
+                          <MinimalButton
+                            variant="primary"
                             disabled={product.status !== 'available'}
                             onClick={product.id === 'ai-chatbot' ? handleShowUseCases : undefined}
-                            sx={{
-                              borderRadius: 2,
-                              px: 3,
-                              py: 1.5,
-                              fontWeight: 600,
-                            }}
+                            className={clsx(product.status !== 'available' && "opacity-50 cursor-not-allowed", "flex-1")}
                           >
-                            {product.status === 'available' ? t('products.viewUseCases') : t('products.status.coming-soon')}
-                          </Button>
-                          
+                            {product.status === 'available' ? (
+                              <span className="flex items-center gap-2">{t('products.viewUseCases')} <ArrowRight className="w-4 h-4" /></span>
+                            ) : t('products.status.coming-soon')}
+                          </MinimalButton>
+
                           {product.status === 'available' && (
-                            <Button
-                              variant="outlined"
-                              endIcon={<LaunchIcon />}
-                              onClick={product.id === 'ai-chatbot' ? handleOpenDemo : undefined}
-                              sx={{
-                                borderRadius: 2,
-                                px: 3,
-                                py: 1.5,
-                                fontWeight: 600,
-                              }}
-                            >
-                              Demo
-                            </Button>
+                            <MinimalButton variant="outline" onClick={product.id === 'ai-chatbot' ? handleOpenDemo : undefined} className="flex-1">
+                              <span className="flex items-center gap-2">Demo <ExternalLink className="w-4 h-4" /></span>
+                            </MinimalButton>
                           )}
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        )}
+                        </div>
+                      </GlassCard>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        {/* All Products Grid */}
-        {allProducts.length > featuredProducts.length && (
-          <>
-            <Divider sx={{ my: { xs: 6, md: 8 } }} />
-            
-            <Typography
-              variant="h4"
-              sx={{
-                mb: 6,
-                color: 'text.primary',
-                fontWeight: 600,
-                textAlign: 'center',
-              }}
-            >
-              {t('products.all')}
-            </Typography>
+            {/* All Products Grid */}
+            {allProducts.length > featuredProducts.length && (
+              <>
+                <div className="h-px bg-white/20 my-20" />
 
-            <Grid container spacing={3}>
-              {allProducts.map((product, index) => (
-                <Grid item xs={12} sm={6} md={4} key={product.id}>
-                  <motion.div
-                    initial="offscreen"
-                    whileInView="onscreen"
-                    viewport={{ once: true, amount: 0.3 }}
-                    variants={cardVariants}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Card
-                      sx={{
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        borderRadius: 2,
-                        border: '1px solid',
-                        borderColor: product.featured ? 'primary.main' : 'grey.200',
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          transform: 'translateY(-4px)',
-                          boxShadow: '0px 12px 32px rgba(0, 0, 0, 0.1)',
-                          borderColor: 'primary.main',
-                        },
-                      }}
-                    >
-                      <CardContent sx={{ p: 3, flexGrow: 1 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                          <Typography
-                            variant="h6"
-                            component="h3"
-                            sx={{
-                              fontWeight: 600,
-                              color: 'text.primary',
-                              fontSize: '1.1rem',
-                            }}
-                          >
-                            {product.name}
-                          </Typography>
-                          <Chip
-                            label={getStatusText(product.status)}
-                            color={getStatusColor(product.status) as any}
-                            size="small"
-                          />
-                        </Box>
+                <h3 className="text-2xl font-bold text-white mb-10 text-center uppercase tracking-wider">
+                  {t('products.all')}
+                </h3>
 
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            mb: 3,
-                            lineHeight: 1.5,
-                          }}
-                        >
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                  {allProducts.map((product, index) => (
+                    <div key={product.id} className="flex h-full">
+                      <GlassCard className="w-full h-full flex flex-col !bg-white/5 p-8" delay={index * 0.1}>
+                        <div className="flex justify-between items-start mb-6">
+                          <h4 className="text-xl font-bold text-white">{product.name}</h4>
+                          <div className={clsx("px-2 py-0.5 rounded text-[10px] font-bold border uppercase self-start", getStatusStyle(product.status))}>
+                            {getStatusText(product.status)}
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-gray-400 mb-8 flex-grow leading-relaxed">
                           {product.shortDescription}
-                        </Typography>
+                        </p>
 
-                        <Button
-                          variant={product.featured ? 'contained' : 'outlined'}
-                          size="small"
+                        <MinimalButton
+                          variant={product.featured ? 'primary' : 'outline'}
+                          className="w-full text-sm py-3 mt-auto"
                           disabled={product.status !== 'available'}
                           onClick={product.id === 'ai-chatbot' ? handleShowUseCases : undefined}
-                          sx={{
-                            borderRadius: 2,
-                            fontWeight: 500,
-                            mt: 'auto',
-                          }}
                         >
                           {product.status === 'available' ? t('actions.viewMore') : t('products.status.coming-soon')}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Grid>
-              ))}
-            </Grid>
-          </>
-        )}
-      </Container>
-      </Box>
+                        </MinimalButton>
+                      </GlassCard>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </Container>
+        </section>
       )}
     </>
   );
 };
 
-export default Products; 
+export default Products;
