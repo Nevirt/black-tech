@@ -6,9 +6,12 @@ interface MinimalButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children: ReactNode;
     variant?: 'primary' | 'outline' | 'text';
     fullWidth?: boolean;
+    href?: string;
+    target?: string;
+    rel?: string;
 }
 
-const MinimalButton = ({ children, className, variant = 'primary', fullWidth, ...props }: MinimalButtonProps) => {
+const MinimalButton = ({ children, className, variant = 'primary', fullWidth, href, ...props }: MinimalButtonProps) => {
     const baseStyles = "relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-medium transition-all duration-300 rounded-lg group focus:outline-none";
 
     const variants = {
@@ -17,17 +20,20 @@ const MinimalButton = ({ children, className, variant = 'primary', fullWidth, ..
         text: "bg-transparent text-white hover:text-gray-300 px-4"
     };
 
+    const Component = href ? motion.a : motion.button;
+    const componentProps = href ? { href, ...props } as any : props;
+
     return (
-        <motion.button
+        <Component
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={clsx(baseStyles, variants[variant], fullWidth ? 'w-full' : '', className)}
-            {...props}
+            {...componentProps}
         >
             <span className="relative z-10 flex items-center gap-2">
                 {children}
             </span>
-        </motion.button>
+        </Component>
     );
 };
 

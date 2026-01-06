@@ -57,10 +57,11 @@ Tecnología con propósito. Resultados con dirección.`,
 export const PRODUCTS_CONFIG = [
   {
     id: 'product-cards-generator',
-    name: 'Generador de fichas de producto e-commerce',
+    name: 'ProdifyQ - Generador de listings para e-commerce',
     category: 'Contenido y Automatización',
-    description: 'Genera fichas de producto optimizadas para e-commerce con IA: títulos, descripciones, bullets y SEO en segundos.',
-    shortDescription: 'Fichas de producto con IA listas para vender',
+    description: 'Crea listings de productos de alto rendimiento para cualquier plataforma de comercio electrónico. Generador automático impulsado por IA y optimizado para SEO, entrenado para el algoritmo A9 de Amazon.',
+    shortDescription: 'Listings de alto rendimiento generados con IA',
+    url: 'https://prodifyq.com',
     features: [
       { title: 'Descripciones SEO', description: 'Texto optimizado para buscadores con tono configurable.', icon: 'Description' },
       { title: 'Bullets automáticos', description: 'Puntos clave generados según categoría y atributos.', icon: 'Checklist' },

@@ -30,6 +30,9 @@ import {
   CloudSync,
   Code,
   Insights,
+  Description,
+  Checklist,
+  Upload,
 } from '@mui/icons-material';
 
 interface IconRendererProps {
@@ -70,6 +73,9 @@ const iconMap: { [key: string]: React.ComponentType<any> } = {
   CloudSync,
   Code,
   Insights,
+  Description,
+  Checklist,
+  Upload,
 };
 
 const IconRenderer: React.FC<IconRendererProps> = ({ 

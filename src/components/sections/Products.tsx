@@ -80,7 +80,7 @@ const Products = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                   {featuredProducts.map((product, index) => (
                     <div key={product.id} className="flex h-full">
-                      <GlassCard className="w-full h-full flex flex-col border border-white/20 hover:border-white/60 transition-colors !bg-white/5 p-10" delay={index * 0.2}>
+                      <GlassCard className="w-full h-full flex flex-col border border-white/10 hover:border-white/100 transition-all duration-500 !bg-white/5 hover:!bg-white/10 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] p-10" delay={index * 0.2}>
 
                         <div className="flex justify-between items-start mb-8">
                           <div>
@@ -99,7 +99,7 @@ const Products = () => {
                         <div className="mb-8 mt-auto">
                           <div className="space-y-4">
                             {product.features.slice(0, 3).map((feature, idx) => (
-                              <div key={idx} className="flex gap-4 p-4 rounded bg-white/5">
+                              <div key={idx} className="flex gap-4 p-4 rounded bg-white/5 hover:bg-white/10 transition-colors">
                                 <div className="mt-1 text-white">
                                   <IconRenderer iconName={feature.icon} fontSize="small" />
                                 </div>
@@ -117,14 +117,21 @@ const Products = () => {
                             variant="primary"
                             disabled={product.status !== 'available'}
                             onClick={product.id === 'ai-chatbot' ? handleShowUseCases : undefined}
+                            href={product.url}
+                            target={product.url ? "_blank" : undefined}
+                            rel={product.url ? "noopener noreferrer" : undefined}
                             className={clsx(product.status !== 'available' && "opacity-50 cursor-not-allowed", "flex-1")}
                           >
                             {product.status === 'available' ? (
-                              <span className="flex items-center gap-2">{t('products.viewUseCases')} <ArrowRight className="w-4 h-4" /></span>
+                              product.url ? (
+                                <span className="flex items-center gap-2">Ir al sitio <ExternalLink className="w-4 h-4" /></span>
+                              ) : (
+                                <span className="flex items-center gap-2">{t('products.viewUseCases')} <ArrowRight className="w-4 h-4" /></span>
+                              )
                             ) : t('products.status.coming-soon')}
                           </MinimalButton>
 
-                          {product.status === 'available' && (
+                          {product.status === 'available' && !product.url && (
                             <MinimalButton variant="outline" onClick={product.id === 'ai-chatbot' ? handleOpenDemo : undefined} className="flex-1">
                               <span className="flex items-center gap-2">Demo <ExternalLink className="w-4 h-4" /></span>
                             </MinimalButton>
@@ -149,7 +156,7 @@ const Products = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                   {allProducts.map((product, index) => (
                     <div key={product.id} className="flex h-full">
-                      <GlassCard className="w-full h-full flex flex-col !bg-white/5 p-8" delay={index * 0.1}>
+                      <GlassCard className="w-full h-full flex flex-col !bg-white/5 hover:!bg-white/10 hover:shadow-[0_0_30px_-5px_rgba(255,255,255,0.2)] transition-all duration-500 p-8" delay={index * 0.1}>
                         <div className="flex justify-between items-start mb-6">
                           <h4 className="text-xl font-bold text-white">{product.name}</h4>
                           <div className={clsx("px-2 py-0.5 rounded text-[10px] font-bold border uppercase self-start", getStatusStyle(product.status))}>
@@ -166,8 +173,11 @@ const Products = () => {
                           className="w-full text-sm py-3 mt-auto"
                           disabled={product.status !== 'available'}
                           onClick={product.id === 'ai-chatbot' ? handleShowUseCases : undefined}
+                          href={product.url}
+                          target={product.url ? "_blank" : undefined}
+                          rel={product.url ? "noopener noreferrer" : undefined}
                         >
-                          {product.status === 'available' ? t('actions.viewMore') : t('products.status.coming-soon')}
+                          {product.status === 'available' ? (product.url ? "Ir al sitio" : t('actions.viewMore')) : t('products.status.coming-soon')}
                         </MinimalButton>
                       </GlassCard>
                     </div>
