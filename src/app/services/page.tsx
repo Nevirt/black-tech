@@ -2,25 +2,24 @@
 
 import Layout from '@/components/layout/Layout';
 import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material';
-import { COMPANY_CONFIG, PRODUCTS_CONFIG } from '@/config/company';
 import { useI18n } from '@/i18n/I18nProvider';
 import IconRenderer from '@/components/ui/IconRenderer';
 
 export default function ServicesPage() {
-  const { t } = useI18n();
+  const { t, company, products } = useI18n();
   return (
     <Layout>
       <Box component="section" sx={{ py: { xs: 10, md: 14 } }}>
         <Container maxWidth="lg">
           <Typography variant="h2" sx={{ mb: 2, fontWeight: 700 }}>
-            Servicios
+            {t('services.mainTitle')}
           </Typography>
           <Typography variant="h6" color="text.secondary" sx={{ mb: 6 }}>
-            Soluciones SaaS que automatizan tareas con IA para optimizar procesos y ventas online.
+            {t('services.mainSubtitle')}
           </Typography>
 
           <Grid container spacing={3} sx={{ mb: 8 }}>
-            {COMPANY_CONFIG.services.map((service) => (
+            {company.services.map((service) => (
               <Grid item xs={12} sm={6} md={4} key={service.title}>
                 <Card sx={{ height: '100%', borderRadius: 2, border: '1px solid', borderColor: 'grey.200' }}>
                   <CardContent>
@@ -42,7 +41,7 @@ export default function ServicesPage() {
             {t('services.products.subtitle')}
           </Typography>
           <Grid container spacing={3}>
-            {PRODUCTS_CONFIG.map((product) => (
+            {products.map((product) => (
               <Grid item xs={12} md={6} key={product.id}>
                 <Card sx={{ height: '100%', borderRadius: 2, border: '1px solid', borderColor: 'grey.200' }}>
                   <CardContent>
@@ -50,7 +49,7 @@ export default function ServicesPage() {
                       {product.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                      {product.category} · {product.status === 'available' ? 'Disponible' : product.status === 'coming-soon' ? 'Próximamente' : 'Beta'}
+                      {product.category} · {product.status === 'available' ? t('products.status.available') : product.status === 'coming-soon' ? t('products.status.coming-soon') : t('products.status.beta')}
                     </Typography>
                     <Typography color="text.secondary">{product.description}</Typography>
                   </CardContent>

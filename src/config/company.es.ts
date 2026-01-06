@@ -18,10 +18,8 @@ Tecnología con propósito. Resultados con dirección.`,
   },
 
   socialLinks: [
-    { name: 'LinkedIn', url: 'https://linkedin.com/company/inzaiq', icon: 'LinkedIn' },
-    { name: 'Twitter', url: 'https://twitter.com/inzaiq', icon: 'Twitter' },
-    { name: 'Instagram', url: 'https://instagram.com/inzaiq', icon: 'Instagram' },
-    { name: 'GitHub', url: 'https://github.com/inzaiq', icon: 'GitHub' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/company/inzaiq/', icon: 'LinkedIn' },
+    { name: 'Instagram', url: 'https://www.instagram.com/inzaiq?igsh=MWpnejU3dXFtaGh4eg==', icon: 'Instagram' },
   ],
 
   navigation: [

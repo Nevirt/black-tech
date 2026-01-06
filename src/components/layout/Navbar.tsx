@@ -16,6 +16,8 @@ import {
 import { motion } from 'framer-motion';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { COMPANY_CONFIG } from '@/config/company';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { useI18n } from '@/i18n/I18nProvider';
@@ -25,6 +27,8 @@ const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { scrollToSection: scrollTo } = useScrollTo();
   const { locale, setLocale, t, company } = useI18n();
+  const pathname = usePathname();
+  const router = useRouter();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 20,
@@ -40,7 +44,19 @@ const Navbar = () => {
 
   const scrollToSection = (sectionId: string) => {
     handleCloseNavMenu();
-    scrollTo(sectionId);
+    if (pathname !== '/') {
+      router.push('/' + sectionId);
+    } else {
+      scrollTo(sectionId);
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (pathname !== '/') {
+      router.push('/');
+    } else {
+      scrollTo('#home');
+    }
   };
 
   return (
@@ -67,7 +83,7 @@ const Navbar = () => {
               alignItems: 'center',
               cursor: 'pointer',
             }}
-            onClick={() => scrollToSection('#home')}
+            onClick={handleLogoClick}
           >
             <Image
               src="/inzaiq-logo-blanco.png"
@@ -102,7 +118,7 @@ const Navbar = () => {
               alignItems: 'center',
               cursor: 'pointer',
             }}
-            onClick={() => scrollToSection('#home')}
+            onClick={handleLogoClick}
           >
             <Image
               src="/inzaiq-logo-blanco.png"
